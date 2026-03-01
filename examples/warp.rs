@@ -1,10 +1,24 @@
 use warp::Filter;
 use openapi_ui::{generate_docs, ThemeMode};
 
+// In a real app, generate your OpenAPI JSON using utoipa:
+//
+// ```
+// use utoipa::OpenApi;
+//
+// #[derive(OpenApi)]
+// #[openapi(paths(get_api))]
+// struct ApiDoc;
+//
+// let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
+// ```
+
 #[tokio::main]
 async fn main() {
     let docs = warp::path("docs")
         .map(|| {
+            // Replace with utoipa-generated JSON:
+            // let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
             let openapi_json = r#"{
                 "openapi": "3.0.0",
                 "info": {

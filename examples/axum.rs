@@ -2,6 +2,18 @@ use axum::{response::Html, routing::get, Router};
 use openapi_ui::{generate_docs, ThemeMode};
 use std::net::SocketAddr;
 
+// In a real app, generate your OpenAPI JSON using utoipa:
+//
+// ```
+// use utoipa::OpenApi;
+//
+// #[derive(OpenApi)]
+// #[openapi(paths(show_users), components(schemas(User)))]
+// struct ApiDoc;
+//
+// let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
+// ```
+
 #[tokio::main]
 async fn main() {
     let app = Router::new().route("/docs", get(show_docs));
@@ -13,6 +25,8 @@ async fn main() {
 }
 
 async fn show_docs() -> Html<String> {
+    // Replace with utoipa-generated JSON:
+    // let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
     let openapi_json = r#"{
         "openapi": "3.0.0",
         "info": {

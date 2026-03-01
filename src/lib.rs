@@ -17,6 +17,22 @@
 //! - [Poem](https://github.com/kimolalekan/openapi-ui/blob/main/examples/poem.rs)
 //! - [Salvo](https://github.com/kimolalekan/openapi-ui/blob/main/examples/salvo.rs)
 //!
+//! ## Generating OpenAPI JSON with utoipa
+//!
+//! The OpenAPI JSON can be generated using [utoipa](https://crates.io/crates/utoipa):
+//!
+//! ```rust,ignore
+//! use utoipa::OpenApi;
+//! use openapi_ui::{generate_docs, ThemeMode};
+//!
+//! #[derive(OpenApi)]
+//! #[openapi(paths(get_users), components(schemas(User)))]
+//! struct ApiDoc;
+//!
+//! let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
+//! let html = generate_docs(&openapi_json, ThemeMode::System, None, None).unwrap();
+//! ```
+//!
 //! ## Usage
 //!
 //! ```rust

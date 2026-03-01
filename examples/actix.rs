@@ -1,8 +1,22 @@
 use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 use openapi_ui::{generate_docs, ThemeMode};
 
+// In a real app, generate your OpenAPI JSON using utoipa:
+//
+// ```
+// use utoipa::OpenApi;
+//
+// #[derive(OpenApi)]
+// #[openapi(paths(show_data), components(schemas(DataItem)))]
+// struct ApiDoc;
+//
+// let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
+// ```
+
 #[get("/docs")]
 async fn show_docs() -> impl Responder {
+    // Replace with utoipa-generated JSON:
+    // let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
     let openapi_json = r#"{
         "openapi": "3.0.0",
         "info": {

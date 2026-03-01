@@ -53,6 +53,31 @@ async fn main() {
 }
 ```
 
+## Using with utoipa
+
+The OpenAPI JSON string can be generated at compile time using [utoipa](https://crates.io/crates/utoipa). Annotate your routes and models, then pass the generated JSON to `openapi-ui`:
+
+```rust
+use utoipa::OpenApi;
+use openapi_ui::{generate_docs, ThemeMode};
+
+#[derive(OpenApi)]
+#[openapi(
+    paths(get_users, create_user),
+    components(schemas(User))
+)]
+struct ApiDoc;
+
+// Generate the OpenAPI JSON from utoipa
+let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
+
+// Pass it to openapi-ui
+let html = generate_docs(&openapi_json, ThemeMode::System, None, None).unwrap();
+std::fs::write("docs.html", html).unwrap();
+```
+
+All framework examples in the `examples/` directory include comments showing how to integrate with utoipa.
+
 ## Installation
 
 Add this to your `Cargo.toml`:
