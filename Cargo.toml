@@ -1,0 +1,26 @@
+[package]
+name = "openapi-ui"
+version = "0.1.0"
+edition = "2024"
+description = "OpenAPI/Swagger documentation UI generator for Rust."
+license = "MIT"
+repository = "https://github.com/kimolalekan/openapi-ui"
+documentation = "https://docs.rs/openapi-ui"
+readme = "README.md"
+keywords = ["openapi", "swagger", "ui", "documentation", "generator"]
+categories = ["development-tools", "visualization", "web-programming"]
+exclude = [".DS_Store", "target", ".git"]
+
+[dependencies]
+thiserror = "1.0.56"
+serde_json = "1.0.111"
+serde = { version = "1.0.195", features = ["derive"] }
+
+[dev-dependencies]
+tokio = { version = "1.0", features = ["full"] }
+axum = "0.7"
+actix-web = "4"
+rocket = "0.5"
+warp = "0.3"
+poem = "3.1"
+salvo = "0.72"

@@ -1,0 +1,4174 @@
+<!doctype html>
+<html lang="en" data-theme="{{theme}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="icon" href="{{favicon}}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link
+      id="hljs-dark"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <link
+      id="hljs-light"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"
+      disabled
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/xml/xml.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+      }
+
+      {{light}}
+
+      {{dark}}
+
+      :root,
+      [data-theme="dark"] {
+          /* nav active state */
+          --nav-active-border: var(--accent);
+          --nav-active-bg: var(--accent-bg);
+
+          /* method badge border colours map to their method var */
+          --m-get: var(--green);
+          --m-post: var(--blue);
+          --m-put: var(--orange);
+          --m-patch: var(--purple);
+          --m-delete: var(--red);
+          --m-head: var(--cyan);
+      }
+
+      /* ── Element resets that depend on theme ─────────────────── */
+      body {
+          background: var(--bg);
+          color: var(--t1);
+      }
+
+      ::-webkit-scrollbar-track {
+          background: var(--sb-t);
+      }
+      ::-webkit-scrollbar-thumb {
+          background: var(--sb-th);
+      }
+
+      /* ── Sidebar ─────────────────────────────────────────────── */
+      .sidebar {
+          background: var(--bg-sub);
+          border-right-color: var(--bd);
+      }
+      .topbar {
+          background: var(--bg-sub);
+          border-bottom-color: var(--bd);
+      }
+
+      .sb-title {
+          color: var(--t1);
+      }
+      .sb-ver {
+          color: var(--t3);
+          border-color: var(--bd);
+      }
+      .sb-oa {
+          color: var(--t4);
+      }
+
+      .sb-srch input {
+          background: var(--bg-card);
+          border-color: var(--bd);
+          color: var(--t1);
+      }
+      .sb-srch input::placeholder {
+          color: var(--t4);
+      }
+      .sb-srch input:focus {
+          border-color: var(--accent);
+      }
+      .sb-srch i {
+          color: var(--t4);
+      }
+
+      .sb-grp-hd {
+          color: var(--t3);
+      }
+      .sb-grp-hd .ln {
+          background: var(--bd);
+      }
+
+      .ep-btn:hover {
+          background: color-mix(in srgb, var(--t1) 4%, transparent);
+      }
+      .ep-btn.on {
+          border-left-color: var(--accent);
+          background: var(--accent-bg);
+      }
+      .ep-m {
+      }
+      .ep-p {
+          color: var(--t2);
+      }
+
+      .sb-foot {
+          color: var(--t3);
+          border-top-color: var(--bd);
+      }
+      .sb-foot i {
+          color: var(--green);
+      }
+
+      /* ── Theme toggle buttons ────────────────────────────────── */
+      .theme-btn {
+          background: transparent;
+          color: var(--t3);
+      }
+      .theme-btn:hover {
+          color: var(--t1);
+      }
+      .theme-btn.on {
+          color: var(--accent);
+          background: var(--accent-bg);
+      }
+
+      /* ── Topbar ──────────────────────────────────────────────── */
+      .server-pill {
+          background: var(--bg-card);
+          border-color: var(--bd);
+          color: var(--t2);
+      }
+      .server-url {
+          color: var(--t2);
+      }
+      .auth-badge {
+          color: var(--orange);
+          border-color: color-mix(
+              in srgb,
+              var(--orange) 40%,
+              transparent
+          );
+      }
+      .import-btn {
+          background: var(--bg-card);
+          border-color: var(--bd);
+          color: var(--t2);
+      }
+      .import-btn:hover {
+          border-color: var(--accent);
+          color: var(--accent);
+      }
+
+      /* ── Endpoint header ─────────────────────────────────────── */
+      .ep-summary {
+          color: var(--t1);
+      }
+      .ep-opid {
+          color: var(--t3);
+      }
+      .ep-path-pill {
+          color: var(--t1);
+      }
+      .auth-pill {
+          color: var(--orange);
+          border-color: var(--orange);
+      }
+
+      .mbg-get {
+          background: color-mix(in srgb, var(--green) 8%, transparent);
+      }
+      .mbg-post {
+          background: color-mix(in srgb, var(--blue) 8%, transparent);
+      }
+      .mbg-put {
+          background: color-mix(in srgb, var(--orange) 8%, transparent);
+      }
+      .mbg-patch {
+          background: color-mix(in srgb, var(--purple) 8%, transparent);
+      }
+      .mbg-delete {
+          background: color-mix(in srgb, var(--red) 8%, transparent);
+      }
+
+      .ep-hdr {
+          border-bottom-color: var(--bd);
+      }
+      .ep-body {
+      }
+
+      /* ── Section label ───────────────────────────────────────── */
+      .sec-lbl {
+          color: var(--t3);
+      }
+
+      /* ── Params / body tables ────────────────────────────────── */
+      .params-tbl {
+          border-color: var(--bd);
+      }
+      .p-row {
+          border-bottom-color: var(--bd-sub);
+      }
+      .p-name {
+          color: var(--t1);
+      }
+      .p-in {
+          color: var(--t3);
+          border-color: var(--bd);
+      }
+      .p-type {
+          color: var(--cyan);
+      }
+      .p-desc {
+          color: var(--t2);
+      }
+      .p-req {
+          color: var(--red);
+      }
+      .enum-chip {
+          background: var(--bg-code);
+          border-color: var(--bd);
+          color: var(--t2);
+      }
+
+      .rb-req {
+          color: var(--red);
+          border-color: var(--red);
+      }
+      .mp-note {
+          border-color: var(--bd);
+          color: var(--t2);
+      }
+      .mp-note i {
+          color: var(--orange);
+      }
+
+      /* ── Code blocks ─────────────────────────────────────────── */
+      .code-wrap {
+          border-color: var(--bd);
+      }
+      .code-hd {
+          background: var(--bg-code);
+          border-bottom-color: var(--bd);
+      }
+      .code-hd-lbl {
+          color: var(--t3);
+      }
+      .code-wrap pre {
+          background: var(--bg-code) !important;
+      }
+
+      /* ── Language tabs ───────────────────────────────────────── */
+      .lang-tabs {
+          background: var(--bg-code);
+          border-bottom-color: var(--bd);
+      }
+      .lang-tab {
+          color: var(--t3);
+          border-bottom-color: transparent;
+      }
+      .lang-tab:hover {
+          color: var(--t1);
+      }
+      .lang-tab.on {
+          color: var(--accent);
+          border-bottom-color: var(--accent);
+      }
+
+      /* ── Response tabs ───────────────────────────────────────── */
+      .resp-tab {
+          border-color: var(--bd);
+          color: var(--t3);
+      }
+      .resp-tab:hover {
+          border-color: var(--t3);
+          color: var(--t1);
+      }
+      .resp-tab.on {
+          background: var(--bg-card);
+          color: var(--t1);
+          border-color: var(--t2);
+      }
+      .resp-box {
+          border-color: var(--bd);
+      }
+
+      .s2 {
+          color: var(--s2xx);
+      }
+      .s3 {
+          color: var(--s3xx);
+      }
+      .s4 {
+          color: var(--s4xx);
+      }
+      .s5 {
+          color: var(--s5xx);
+      }
+
+      /* ── Copy button ─────────────────────────────────────────── */
+      .copy-btn {
+          background: var(--bg-sub);
+          border-color: var(--bd);
+          color: var(--t3);
+      }
+      .copy-btn:hover {
+          color: var(--t1);
+          border-color: var(--t3);
+      }
+      .copy-btn.ok {
+          color: var(--green);
+          border-color: var(--green);
+      }
+
+      /* ── Method badge border colours ─────────────────────────── */
+      .mb-get {
+          border-color: var(--green);
+      }
+      .mb-post {
+          border-color: var(--blue);
+      }
+      .mb-put {
+          border-color: var(--orange);
+      }
+      .mb-patch {
+          border-color: var(--purple);
+      }
+      .mb-delete {
+          border-color: var(--red);
+      }
+
+      /* ── Method text colours ─────────────────────────────────── */
+      .m-get {
+          color: var(--green);
+      }
+      .m-post {
+          color: var(--blue);
+      }
+      .m-put {
+          color: var(--orange);
+      }
+      .m-patch {
+          color: var(--purple);
+      }
+      .m-delete {
+          color: var(--red);
+      }
+      .m-head {
+          color: var(--cyan);
+      }
+
+      /* ── Sidebar logo ────────────────────────────────────────── */
+      .sb-logo {
+          background: var(--accent);
+      }
+
+      /* ── Empty state ─────────────────────────────────────────── */
+      .empty {
+          color: var(--t3);
+      }
+
+      /* ── Import modal ────────────────────────────────────────── */
+      .modal-ov {
+          background: rgba(0, 0, 0, 0.55);
+      }
+      .modal-box {
+          background: var(--bg-card);
+          border-color: var(--bd);
+          box-shadow: var(--shadow-md);
+      }
+      .modal-hd {
+          border-bottom-color: var(--bd);
+      }
+      .modal-ttl {
+          color: var(--t1);
+      }
+      .modal-sub {
+          color: var(--t3);
+      }
+      .modal-cls {
+          color: var(--t3);
+      }
+      .modal-cls:hover {
+          color: var(--t1);
+      }
+      .modal-ta {
+          background: var(--bg-code);
+          border-color: var(--bd);
+          color: var(--t1);
+      }
+      .modal-ta:focus {
+          border-color: var(--accent);
+      }
+      .modal-err {
+          color: var(--red);
+      }
+
+      /* ── Buttons ─────────────────────────────────────────────── */
+      .btn-p {
+          background: var(--accent);
+          color: #fff;
+      }
+      .btn-p:hover {
+          background: var(--accent-h);
+          opacity: 1;
+      }
+      .btn-s {
+          border-color: var(--bd);
+          color: var(--t2);
+      }
+      .btn-s:hover {
+          border-color: var(--t2);
+          color: var(--t1);
+      }
+      html,
+      body,
+      #root {
+          height: 100%;
+      }
+      body {
+          font-family:
+              -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+              "Helvetica Neue", Arial, sans-serif;
+          font-size: 14px;
+          line-height: 1.5;
+          background: var(--bg);
+          color: var(--t1);
+          transition:
+              background 0.2s,
+              color 0.2s;
+      }
+      ::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+          background: var(--sb-t);
+      }
+      ::-webkit-scrollbar-thumb {
+          background: var(--sb-th);
+          border-radius: 3px;
+      }
+      button {
+          font-family: inherit;
+          cursor: pointer;
+      }
+      input,
+      textarea {
+          font-family: inherit;
+      }
+      a {
+          text-decoration: none;
+      }
+      .app {
+          display: flex;
+          height: 100vh;
+          overflow: hidden;
+      }
+      .sidebar {
+          width: 265px;
+          flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          background: var(--bg-sub);
+          border-right: 1px solid var(--bd);
+          overflow: hidden;
+      }
+      .main {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          min-width: 0;
+      }
+      .topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 24px;
+          height: 48px;
+          flex-shrink: 0;
+          background: var(--bg-sub);
+          border-bottom: 1px solid var(--bd);
+          gap: 12px;
+      }
+      .detail {
+          flex: 1;
+          overflow-y: auto;
+      }
+      .sb-hdr {
+          padding: 14px 16px;
+          border-bottom: 1px solid var(--bd);
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+      .sb-brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex: 1;
+      }
+      .sb-logo {
+          width: auto;
+          height: 32px;
+          border-radius: 8px;
+          overflow: hidden;
+          flex-shrink: 0;
+      }
+      .sb-logo.sb-logo-img {
+          background: transparent;
+      }
+      .sb-logo img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          background: transparent;
+      }
+      .sb-title {
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--t1);
+      }
+      .sb-meta {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-top: 3px;
+      }
+      .sb-ver {
+          font-size: 10px;
+          font-family: monospace;
+          color: var(--t3);
+          border: 1px solid var(--bd);
+          border-radius: 3px;
+          padding: 1px 5px;
+      }
+      .sb-oa {
+          font-size: 10px;
+          color: var(--t4);
+      }
+      .sb-themes {
+          display: flex;
+          gap: 4px;
+          padding: 8px 12px;
+          flex-shrink: 0;
+          margin-left: auto;
+      }
+      .theme-btn {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 5px;
+          font-size: 14px;
+          background: transparent;
+          border: 1px solid transparent;
+          color: var(--t3);
+          transition: all 0.15s;
+      }
+      .theme-btn:hover {
+          color: var(--t1);
+      }
+      .theme-btn.on {
+          color: var(--accent);
+          background: color-mix(in srgb, var(--accent) 8%, transparent);
+      }
+      .theme-btn:hover {
+          color: var(--t1);
+      }
+      .theme-btn.on {
+          color: var(--accent);
+          border-color: var(--accent);
+          background: color-mix(in srgb, var(--accent) 8%, transparent);
+      }
+      .sb-srch {
+          padding: 8px 12px;
+          border-bottom: 1px solid var(--bd);
+          flex-shrink: 0;
+          position: relative;
+      }
+      .sb-srch i {
+          position: absolute;
+          left: 23px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--t4);
+          font-size: 11px;
+          pointer-events: none;
+      }
+      .sb-srch input {
+          width: 100%;
+          padding: 7px 10px 7px 30px;
+          border-radius: 6px;
+          border: 1px solid var(--bd);
+          background: var(--bg-card);
+          color: var(--t1);
+          font-size: 12px;
+          transition: border-color 0.15s;
+      }
+      .sb-srch input::placeholder {
+          color: var(--t4);
+      }
+      .sb-srch input:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      .sb-nav {
+          flex: 1;
+          overflow-y: auto;
+          padding: 4px 0 8px;
+      }
+      .sb-grp-hd {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 16px 3px;
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--t3);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          cursor: pointer;
+          user-select: none;
+          transition: all 0.15s;
+      }
+      .sb-grp-hd:hover {
+          color: var(--t1);
+      }
+      .ep-btn {
+          width: 100%;
+          text-align: left;
+          padding: 7px 16px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: none;
+          border: none;
+          border-left: 2px solid transparent;
+          transition:
+              background 0.12s,
+              border-color 0.12s;
+      }
+
+      .ep-btn:hover {
+          background: color-mix(in srgb, var(--t1) 4%, transparent);
+      }
+      .ep-btn.on {
+          border-left-color: var(--accent);
+          background: color-mix(in srgb, var(--accent) 6%, transparent);
+      }
+      .ep-m {
+          font-family: monospace;
+          font-size: 10px;
+          font-weight: 700;
+          width: 46px;
+          text-align: right;
+          flex-shrink: 0;
+      }
+      .ep-p {
+          font-size: 12px;
+          color: var(--t2);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-family: monospace;
+      }
+      .sb-foot {
+          padding: 10px 16px;
+          border-top: 1px solid var(--bd);
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 11px;
+          color: var(--t3);
+      }
+      .m-get {
+          color: var(--green);
+      }
+      .m-post {
+          color: var(--accent);
+      }
+      .m-put {
+          color: var(--orange);
+      }
+      .m-patch {
+          color: var(--purple);
+      }
+      .m-delete {
+          color: var(--red);
+      }
+      .m-head {
+          color: var(--cyan);
+      }
+      .mb-get {
+          border-color: var(--green);
+      }
+      .mb-post {
+          border-color: var(--accent);
+      }
+      .mb-put {
+          border-color: var(--orange);
+      }
+      .mb-patch {
+          border-color: var(--purple);
+      }
+      .mb-delete {
+          border-color: var(--red);
+      }
+      .mbg-get {
+          background: color-mix(in srgb, var(--green) 8%, transparent);
+      }
+      .mbg-post {
+          background: color-mix(in srgb, var(--accent) 8%, transparent);
+      }
+      .mbg-put {
+          background: color-mix(in srgb, var(--orange) 8%, transparent);
+      }
+      .mbg-patch {
+          background: color-mix(in srgb, var(--purple) 8%, transparent);
+      }
+      .mbg-delete {
+          background: color-mix(in srgb, var(--red) 8%, transparent);
+      }
+      .method-badge {
+          font-family: monospace;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 2px 8px;
+          border-radius: 4px;
+          border: 1px solid;
+      }
+      .server-pill {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          background: var(--bg-card);
+          border: 1px solid var(--bd);
+          border-radius: 5px;
+          padding: 4px 10px;
+          color: var(--t2);
+      }
+      .server-url {
+          font-family: monospace;
+      }
+      .auth-badge {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 11px;
+          color: var(--orange);
+          border: 1px solid
+              color-mix(in srgb, var(--orange) 40%, transparent);
+          border-radius: 5px;
+          padding: 4px 10px;
+      }
+      .import-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          background: var(--bg-card);
+          border: 1px solid var(--bd);
+          color: var(--t2);
+          border-radius: 6px;
+          padding: 6px 12px;
+          transition: all 0.15s;
+      }
+      .import-btn:hover {
+          border-color: var(--accent);
+          color: var(--accent);
+      }
+      .ep-hdr {
+          padding: 24px 32px;
+          border-bottom: 1px solid var(--bd);
+      }
+      .ep-hdr-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+      }
+      .ep-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          border: 1px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 15px;
+          flex-shrink: 0;
+      }
+      .ep-summary {
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--t1);
+          margin-top: 6px;
+      }
+      .ep-opid {
+          font-family: monospace;
+          font-size: 10px;
+          color: var(--t3);
+          margin-top: 4px;
+      }
+      .ep-path-pill {
+          font-family: monospace;
+          font-size: 13px;
+          color: var(--t1);
+      }
+      .auth-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          color: var(--orange);
+          border: 1px solid var(--orange);
+          border-radius: 4px;
+          padding: 2px 7px;
+      }
+      .ep-body {
+          padding: 24px 32px;
+      }
+      .sec-lbl {
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--t3);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin-bottom: 10px;
+      }
+      .params-tbl {
+          border: 1px solid var(--bd);
+          border-radius: 8px;
+          overflow: hidden;
+          margin-bottom: 20px;
+      }
+      .p-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          padding: 11px 16px;
+          font-size: 13px;
+          border-bottom: 1px solid var(--bd-sub);
+      }
+      .p-row:last-child {
+          border-bottom: none;
+      }
+      .p-name {
+          width: 130px;
+          flex-shrink: 0;
+          font-family: monospace;
+          font-weight: 600;
+          font-size: 12px;
+      }
+      .p-meta {
+          width: 90px;
+          flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+      }
+      .p-in {
+          font-size: 10px;
+          font-family: monospace;
+          border: 1px solid var(--bd);
+          border-radius: 3px;
+          padding: 1px 5px;
+          color: var(--t3);
+          width: fit-content;
+      }
+      .p-type {
+          font-size: 10px;
+          color: var(--cyan);
+          font-family: monospace;
+      }
+      .p-desc {
+          flex: 1;
+          color: var(--t2);
+          line-height: 1.5;
+      }
+      .p-req {
+          color: var(--red);
+          font-size: 10px;
+          margin-left: 2px;
+      }
+      .enum-chip {
+          display: inline-block;
+          font-family: monospace;
+          font-size: 10px;
+          background: var(--bg-code);
+          border: 1px solid var(--bd);
+          border-radius: 3px;
+          padding: 1px 6px;
+          color: var(--t2);
+          margin: 2px 2px 0 0;
+      }
+      .code-wrap {
+          border: 1px solid var(--bd);
+          border-radius: 8px;
+          overflow: hidden;
+          margin-bottom: 16px;
+      }
+      .code-hd {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 7px 14px;
+          background: var(--bg-code);
+          border-bottom: 1px solid var(--bd);
+      }
+      .code-hd-lbl {
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: var(--t3);
+      }
+      .code-wrap pre {
+          padding: 16px;
+          overflow-x: auto;
+          background: var(--bg-code) !important;
+          margin: 0;
+      }
+      .hljs {
+          background: transparent !important;
+          padding: 0 !important;
+          font-size: 12px !important;
+          line-height: 1.65 !important;
+          font-family:
+              ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+              monospace !important;
+      }
+      .copy-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 11px;
+          background: var(--bg-sub);
+          border: 1px solid var(--bd);
+          color: var(--t3);
+          border-radius: 4px;
+          padding: 3px 9px;
+          transition: all 0.15s;
+      }
+      .copy-btn:hover {
+          color: var(--t1);
+          border-color: var(--t3);
+      }
+      .copy-btn.ok {
+          color: var(--green);
+          border-color: var(--green);
+      }
+      .lang-tabs {
+          display: flex;
+          overflow-x: auto;
+          background: var(--bg-code);
+          border-bottom: 1px solid var(--bd);
+      }
+      .lang-tab {
+          padding: 8px 14px;
+          font-size: 12px;
+          white-space: nowrap;
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          color: var(--t3);
+          transition: all 0.15s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+      }
+      .lang-tab:hover {
+          color: var(--t1);
+      }
+      .lang-tab.on {
+          color: var(--accent);
+          border-bottom-color: var(--accent);
+      }
+      .resp-tabs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: 12px;
+      }
+      .resp-tab {
+          font-family: monospace;
+          font-size: 12px;
+          border: 1px solid var(--bd);
+          border-radius: 5px;
+          padding: 4px 12px;
+          background: transparent;
+          color: var(--t3);
+          transition: all 0.15s;
+      }
+      .resp-tab:hover {
+          border-color: var(--t3);
+          color: var(--t1);
+      }
+      .resp-tab.on {
+          background: var(--bg-card);
+          color: var(--t1);
+          border-color: var(--t2);
+      }
+      .resp-box {
+          border: 1px solid var(--bd);
+          border-radius: 8px;
+          padding: 14px 16px;
+      }
+      .s2 {
+          color: var(--green);
+      }
+      .s3 {
+          color: var(--cyan);
+      }
+      .s4 {
+          color: var(--orange);
+      }
+      .s5 {
+          color: var(--red);
+      }
+      .rb-hd {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
+      }
+      .rb-req {
+          font-size: 10px;
+          color: var(--red);
+          border: 1px solid var(--red);
+          border-radius: 3px;
+          padding: 1px 7px;
+      }
+      .mp-note {
+          padding: 10px 14px;
+          border: 1px solid var(--bd);
+          border-radius: 6px;
+          font-size: 12px;
+          color: var(--t2);
+          margin-bottom: 12px;
+      }
+      .empty {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          gap: 12px;
+          color: var(--t3);
+      }
+      .empty i {
+          font-size: 36px;
+          opacity: 0.2;
+      }
+      .empty p {
+          font-size: 13px;
+      }
+      .modal-ov {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.55);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 200;
+          padding: 16px;
+      }
+      .modal-box {
+          background: var(--bg-card);
+          border: 1px solid var(--bd);
+          border-radius: 12px;
+          width: 100%;
+          max-width: 620px;
+          box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+      }
+      .modal-hd {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 24px;
+          border-bottom: 1px solid var(--bd);
+      }
+      .modal-ttl {
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--t1);
+      }
+      .modal-sub {
+          font-size: 11px;
+          color: var(--t3);
+          margin-top: 2px;
+      }
+      .modal-cls {
+          background: none;
+          border: none;
+          color: var(--t3);
+          font-size: 18px;
+          padding: 4px;
+          border-radius: 4px;
+          transition: color 0.15s;
+      }
+      .modal-cls:hover {
+          color: var(--t1);
+      }
+      .modal-bdy {
+          padding: 20px 24px;
+      }
+      .modal-ta {
+          width: 100%;
+          height: 240px;
+          resize: none;
+          padding: 12px;
+          background: var(--bg-code);
+          border: 1px solid var(--bd);
+          border-radius: 6px;
+          color: var(--t1);
+          font-family: monospace;
+          font-size: 12px;
+      }
+      .modal-ta:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      .modal-err {
+          font-size: 12px;
+          color: var(--red);
+          margin-top: 8px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+      }
+      .modal-btns {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin-top: 16px;
+      }
+      .btn-p {
+          background: var(--accent);
+          color: #fff;
+          border: none;
+          border-radius: 6px;
+          padding: 9px 0;
+          font-size: 13px;
+          font-weight: 600;
+          transition: opacity 0.15s;
+          width: 100%;
+      }
+      .btn-p:hover {
+          opacity: 0.88;
+      }
+      .btn-s {
+          background: transparent;
+          border: 1px solid var(--bd);
+          color: var(--t2);
+          border-radius: 6px;
+          padding: 9px 0;
+          font-size: 13px;
+          transition: all 0.15s;
+          width: 100%;
+      }
+      .btn-s:hover {
+          border-color: var(--t2);
+          color: var(--t1);
+      }
+      @keyframes fadeUp {
+          from {
+              opacity: 0;
+              transform: translateY(6px);
+          }
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+      .fu {
+          animation: fadeUp 0.25s ease forwards;
+      }
+
+      /* ── API Testing UI ──────────────────────────────────────── */
+      .test-panel {
+          background: var(--bg-card);
+          border: 1px solid var(--bd);
+          border-radius: 8px;
+          padding: 16px;
+          margin-bottom: 20px;
+      }
+      .test-panel-hd {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 12px;
+      }
+      .test-panel-ttl {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--t1);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      .auth-input-grp {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          margin-bottom: 12px;
+      }
+      .auth-input {
+          flex: 1;
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--bd);
+          background: var(--bg-code);
+          color: var(--t1);
+          font-size: 12px;
+          font-family: monospace;
+          transition: border-color 0.15s;
+      }
+      .auth-input:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      .auth-input::placeholder {
+          color: var(--t3);
+      }
+      .btn-test {
+          background: var(--accent);
+          color: #fff;
+          border: none;
+          border-radius: 6px;
+          padding: 8px 16px;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+      }
+      .btn-test:hover {
+          background: var(--accent-h);
+          transform: translateY(-1px);
+      }
+      .btn-test:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+      }
+      .btn-test.loading {
+          animation: pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes pulse {
+          0%,
+          100% {
+              opacity: 1;
+          }
+          50% {
+              opacity: 0.6;
+          }
+      }
+      .param-input-row {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          margin-bottom: 10px;
+      }
+      .param-input-row:last-child {
+          margin-bottom: 0;
+      }
+      .param-label {
+          width: 120px;
+          flex-shrink: 0;
+          font-family: monospace;
+          font-size: 12px;
+          color: var(--t2);
+      }
+      .param-input {
+          flex: 1;
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--bd);
+          background: var(--bg-code);
+          color: var(--t1);
+          font-size: 12px;
+          font-family: monospace;
+          transition: border-color 0.15s;
+      }
+      .param-input:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      .param-input::placeholder {
+          color: var(--t3);
+      }
+      .param-type {
+          width: 100px;
+          flex-shrink: 0;
+          font-size: 10px;
+          color: var(--cyan);
+          font-family: monospace;
+          text-align: right;
+      }
+      .req-body-ta {
+          width: 100%;
+          min-height: 150px;
+          padding: 12px;
+          border-radius: 6px;
+          border: 1px solid var(--bd);
+          background: var(--bg-code);
+          color: var(--t1);
+          font-size: 12px;
+          font-family:
+              ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+              monospace;
+          resize: vertical;
+          transition: border-color 0.15s;
+      }
+      .req-body-ta:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      .code-editor-wrapper {
+          border: 1px solid var(--bd);
+          border-radius: 6px;
+          overflow: hidden;
+      }
+      .code-editor-wrapper .CodeMirror {
+          height: auto;
+          min-height: 70px;
+          font-family:
+              ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+              monospace;
+          font-size: 12px;
+          line-height: 1.5;
+          color: var(--t1);
+          background: var(--bg-code);
+      }
+      .code-editor-wrapper .CodeMirror-scroll {
+          height: auto;
+          overflow-y: hidden;
+          overflow-x: auto;
+          min-height: 70px;
+      }
+      .code-editor-wrapper .CodeMirror-sizer {
+          min-height: 70px !important;
+      }
+      .code-editor-wrapper .CodeMirror-gutters {
+          background: var(--bg-code);
+          border-right: 1px solid var(--bd);
+          min-height: 70px;
+      }
+      .code-editor-wrapper .CodeMirror-linenumber {
+          color: var(--t3);
+      }
+      .code-editor-wrapper .error-gutter {
+          width: 20px;
+      }
+      .code-editor-wrapper .CodeMirror-cursor {
+          border-color: var(--accent);
+      }
+      .code-editor-wrapper .CodeMirror-selected {
+          background: color-mix(
+              in srgb,
+              var(--accent) 20%,
+              transparent
+          ) !important;
+      }
+      .code-editor-wrapper .cm-property {
+          color: #d19a66 !important;
+      }
+      .code-editor-wrapper .cm-attribute {
+          color: #d19a66 !important;
+      }
+      .code-editor-wrapper .cm-string {
+          color: #98c379;
+      }
+      .code-editor-wrapper .cm-number {
+          color: #d19a66;
+      }
+      .code-editor-wrapper .cm-atom {
+          color: #c678dd;
+      }
+      .code-editor-wrapper .cm-bool {
+          color: #d19a66;
+      }
+      .code-editor-wrapper .cm-bracket {
+          color: #abb2bf;
+      }
+      .code-editor-wrapper .cm-punctuation {
+          color: #abb2bf;
+      }
+      .code-editor-wrapper .cm-json-error {
+          background: rgba(224, 92, 75, 0.2);
+          border-bottom: 2px wavy #e05c4b;
+      }
+      .json-error-hint {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          color: #e05c4b;
+          background: rgba(224, 92, 75, 0.1);
+          padding: 6px 10px;
+          border-radius: 4px;
+          margin-top: 8px;
+      }
+      .auth-header-input {
+          margin-bottom: 12px;
+      }
+      .auth-header-label {
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--t3);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin-bottom: 6px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+      }
+      .auth-header-input input {
+          width: 100%;
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--bd);
+          background: var(--bg-code);
+          color: var(--t1);
+          font-size: 12px;
+          font-family: monospace;
+          transition: border-color 0.15s;
+      }
+      .auth-header-input input:focus {
+          outline: none;
+          border-color: var(--accent);
+      }
+      .auth-header-input input::placeholder {
+          color: var(--t3);
+      }
+      .response-area {
+          margin-top: 16px;
+      }
+      .response-hd {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
+      }
+      .response-ttl {
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--t1);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      .response-status {
+          font-family: monospace;
+          font-size: 11px;
+          padding: 3px 8px;
+          border-radius: 4px;
+          border: 1px solid;
+      }
+      .response-status.success {
+          color: var(--green);
+          border-color: var(--green);
+          background: color-mix(in srgb, var(--green) 8%, transparent);
+      }
+      .response-status.error {
+          color: var(--red);
+          border-color: var(--red);
+          background: color-mix(in srgb, var(--red) 8%, transparent);
+      }
+      .response-status.info {
+          color: var(--cyan);
+          border-color: var(--cyan);
+          background: color-mix(in srgb, var(--cyan) 8%, transparent);
+      }
+      .response-box {
+          border: 1px solid var(--bd);
+          border-radius: 6px;
+          overflow: hidden;
+      }
+      .response-pre {
+          margin: 0;
+          padding: 14px;
+          background: var(--bg-code);
+          overflow-x: auto;
+          max-height: 400px;
+          overflow-y: auto;
+      }
+      .response-code {
+          font-family:
+              ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+              monospace;
+          font-size: 11px;
+          line-height: 1.6;
+          color: var(--t1);
+      }
+      .empty-response {
+          padding: 24px;
+          text-align: center;
+          color: var(--t3);
+          font-size: 12px;
+      }
+      .empty-response i {
+          font-size: 24px;
+          margin-bottom: 8px;
+          opacity: 0.3;
+      }
+      .test-url {
+          font-family: monospace;
+          font-size: 11px;
+          color: var(--t2);
+          background: var(--bg-code);
+          padding: 6px 10px;
+          border-radius: 4px;
+          margin-bottom: 12px;
+          overflow-x: auto;
+          white-space: nowrap;
+      }
+      .test-method {
+          font-family: monospace;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 2px 6px;
+          border-radius: 3px;
+          border: 1px solid;
+          margin-right: 6px;
+      }
+      .auth-status {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          color: var(--t3);
+          padding: 6px 10px;
+          background: var(--bg-code);
+          border-radius: 6px;
+      }
+      .auth-status.set {
+          color: var(--green);
+          background: color-mix(in srgb, var(--green) 8%, transparent);
+      }
+      .auth-status i {
+          font-size: 10px;
+      }
+      .test-tabs {
+          display: flex;
+          gap: 4px;
+          margin-bottom: 12px;
+          border-bottom: 1px solid var(--bd);
+          padding-bottom: 8px;
+      }
+      .test-tab {
+          padding: 6px 12px;
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--t3);
+          background: transparent;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.15s;
+      }
+      .test-tab:hover {
+          color: var(--t1);
+          background: var(--bg-code);
+      }
+      .test-tab.on {
+          color: var(--accent);
+          background: var(--accent-bg);
+      }
+      .test-tab-icon {
+          margin-right: 4px;
+          font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import {
+        createElement as h,
+        useState,
+        useEffect,
+        useRef,
+        useCallback,
+        useMemo,
+        Fragment,
+      } from "https://esm.sh/react@19";
+      import { createRoot } from "https://esm.sh/react-dom@19/client";
+
+      // Injected OpenAPI spec - replaced by Rust template engine
+      const INJECTED_SPEC = /* SPEC_JSON_PLACEHOLDER */ null;
+      // Embedded sample data for "Try Sample API" button
+      const SAMPLE_DATA = /* SAMPLE_DATA_PLACEHOLDER */ null;
+
+      const METHOD_ORDER = [
+        "get",
+        "post",
+        "put",
+        "patch",
+        "delete",
+        "head",
+        "options",
+      ];
+      const METHOD_ICON = {
+        get: "fa-download",
+        post: "fa-plus",
+        put: "fa-rotate-right",
+        patch: "fa-pen",
+        delete: "fa-trash",
+        head: "fa-eye",
+        options: "fa-gear",
+      };
+      const LANGS = [
+        { id: "curl", label: "cURL", fa: "fa fa-terminal", hl: "bash" },
+        {
+          id: "javascript",
+          label: "JavaScript",
+          fa: "fab fa-js",
+          hl: "javascript",
+        },
+        {
+          id: "python",
+          label: "Python",
+          fa: "fab fa-python",
+          hl: "python",
+        },
+        { id: "php", label: "PHP", fa: "fab fa-php", hl: "php" },
+        { id: "go", label: "Go", fa: "fab fa-golang", hl: "go" },
+        { id: "rust", label: "Rust", fa: "fab fa-rust", hl: "rust" },
+      ];
+
+      function sCls(c) {
+        const n = parseInt(c);
+        return n < 300 ? "s2" : n < 400 ? "s3" : n < 500 ? "s4" : "s5";
+      }
+
+      function resolveRef(ref, spec) {
+        if (!ref || !ref.startsWith("#/")) return null;
+        return (
+          ref
+            .slice(2)
+            .split("/")
+            .reduce((o, k) => o?.[k], spec) ?? null
+        );
+      }
+
+      function schemaEx(schema, spec, d = 0, fieldName = "") {
+        if (!schema || d > 4) return null;
+        if (schema.$ref) schema = resolveRef(schema.$ref, spec) || schema;
+        if (schema.example !== undefined) return schema.example;
+        if (schema.properties) {
+          const o = {};
+          for (const [k, v] of Object.entries(schema.properties)) {
+            const r = v.$ref ? resolveRef(v.$ref, spec) || v : v;
+            const t = Array.isArray(r.type) ? r.type[0] : r.type;
+            o[k] =
+              r.example ??
+              schemaEx(r, spec, d + 1, k) ??
+              (t === "string"
+                ? r.format === "email"
+                  ? "user@example.com"
+                  : r.format === "date-time"
+                    ? new Date().toISOString()
+                    : r.format === "uuid"
+                      ? "550e8400-e29b-41d4-a716-446655440000"
+                      : (r.enum?.[0] ?? "")
+                : t === "integer" || t === "number"
+                  ? (r.enum?.[0] ?? 0)
+                  : t === "boolean"
+                    ? false
+                    : null);
+          }
+          return o;
+        }
+        if (schema.enum) return schema.enum[0];
+        if (schema.type === "string") {
+          if (schema.format === "email") return "user@example.com";
+          if (schema.format === "date-time") return new Date().toISOString();
+          if (schema.format === "uuid")
+            return "550e8400-e29b-41d4-a716-446655440000";
+          if (schema.format === "date")
+            return new Date().toISOString().split("T")[0];
+          const name = fieldName || schema.name || "";
+          const lower = name.toLowerCase();
+          if (lower.includes("email")) return "user@example.com";
+          if (lower.includes("phone")) return "+1234567890";
+          if (lower.includes("name")) return "Buddy";
+          if (lower.includes("password")) return "SecurePass123!";
+          if (lower.includes("token")) return "tok_" + "x".repeat(24);
+          if (lower.includes("id") || lower.includes("_id"))
+            return "usr_" + Math.random().toString(36).slice(2, 10);
+          if (lower.includes("code")) return "CODE123";
+          if (lower.includes("url") || lower.includes("uri"))
+            return "https://example.com";
+          if (lower.includes("currency")) return "USD";
+          if (lower.includes("status")) return "active";
+          if (lower.includes("title")) return "Sample Title";
+          if (lower.includes("description") || lower.includes("narration"))
+            return "Sample description";
+          if (lower.includes("reference"))
+            return "ref_" + Math.random().toString(36).slice(2, 10);
+          if (lower.includes("account")) return "1234567890";
+          if (lower.includes("bank")) return "bank_code_123";
+          if (lower.includes("amount")) return 100;
+          if (lower.includes("platform")) return "ios";
+          if (lower.includes("device")) return "iPhone 15 Pro";
+          return "";
+        }
+        if (schema.type === "integer" || schema.type === "number") {
+          const name = (fieldName || schema.name || "").toLowerCase();
+          if (
+            name.includes("amount") ||
+            name.includes("price") ||
+            name.includes("total")
+          )
+            return 100;
+          if (name.includes("age")) return 30;
+          if (name.includes("count") || name.includes("limit")) return 10;
+          if (name.includes("page")) return 1;
+          if (name.includes("port")) return 8080;
+          return schema.enum?.[0] ?? 0;
+        }
+        if (schema.type === "boolean") return false;
+        if (schema.type === "array")
+          return [schemaEx(schema.items, spec, d + 1, fieldName)].filter(
+            (x) => x != null,
+          );
+        return null;
+      }
+
+      function getBodyEx(op, spec) {
+        const content = op.requestBody?.content;
+        if (!content) return null;
+        const ct =
+          content["application/json"] || content[Object.keys(content)[0]];
+        if (!ct) return null;
+        if (ct.example) return ct.example;
+        if (ct.schema) {
+          const s = ct.schema.$ref
+            ? resolveRef(ct.schema.$ref, spec)
+            : ct.schema;
+          return schemaEx(s, spec);
+        }
+        return null;
+      }
+
+      function buildEps(spec) {
+        const out = [];
+        if (!spec?.paths) return out;
+        for (const [rawPath, methods] of Object.entries(spec.paths)) {
+          for (const [key, val] of Object.entries(methods)) {
+            if (METHOD_ORDER.includes(key)) {
+              out.push({
+                path: rawPath,
+                method: key,
+                op: val,
+                id: `${key}::${rawPath}`,
+              });
+            } else if (
+              typeof val === "object" &&
+              val !== null &&
+              !Array.isArray(val)
+            ) {
+              const np = rawPath + key;
+              for (const [m, op] of Object.entries(val)) {
+                if (
+                  METHOD_ORDER.includes(m) &&
+                  !out.find((e) => e.id === `${m}::${np}`)
+                )
+                  out.push({
+                    path: np,
+                    method: m,
+                    op,
+                    id: `${m}::${np}`,
+                  });
+              }
+            }
+          }
+        }
+        return out;
+      }
+
+      function groupByTag(eps, tags) {
+        const g = {};
+        for (const ep of eps) {
+          const tgs = ep.op.tags?.length ? ep.op.tags : ["other"];
+          for (const t of tgs) {
+            if (t) (g[t] = g[t] || []).push(ep);
+          }
+        }
+
+        const o = {};
+        const tagList = tags || [];
+        // Handle both [{name: 'tag'}] and ['tag'] formats
+        for (const t of tagList) {
+          const name = typeof t === "string" ? t : t?.name;
+          if (name && g[name]) {
+            o[name] = g[name];
+          }
+        }
+
+        // Add tags that were not in the explicit tags list
+        for (const t of Object.keys(g)) {
+          if (!o[t]) {
+            o[t] = g[t];
+          }
+        }
+        return o;
+      }
+
+      function genCode(lang, ep, spec) {
+        const base = spec.servers?.[0]?.url || "";
+        const { path, method, op } = ep;
+        const url = base + path;
+        const body = getBodyEx(op, spec);
+        const bodyStr = body ? JSON.stringify(body, null, 2) : null;
+        const params = (op.parameters || []).filter((p) => p.in === "query");
+        const qStr = params.length
+          ? "?" +
+            params
+              .map((p) => `${p.name}=${p.example || "<" + p.name + ">"}`)
+              .join("&")
+          : "";
+        const isMP = !!op.requestBody?.content?.["multipart/form-data"];
+        const hasBody = !!bodyStr && !isMP;
+        const M = method.toUpperCase();
+
+        if (lang === "curl") {
+          const lines = [
+            `curl -X ${M} '${url}${qStr}'`,
+            `  -H 'X-API-Key: YOUR_API_KEY'`,
+          ];
+          if (hasBody) {
+            lines.push(`  -H 'Content-Type: application/json'`);
+            lines.push(`  -d '${JSON.stringify(body)}'`);
+          }
+          if (isMP) lines.push(`  -F 'file=@/path/to/file'`);
+          return lines.join(" \\\n");
+        }
+        if (lang === "javascript") {
+          const hdrs = `'X-API-Key': 'YOUR_API_KEY'${hasBody ? ",\n    'Content-Type': 'application/json'" : ""}`;
+          const opts = [`  method: '${M}'`, `  headers: {\n    ${hdrs}\n  }`];
+          if (hasBody)
+            opts.push(
+              `  body: JSON.stringify(${bodyStr.split("\n").join("\n  ")})`,
+            );
+          return `const res = await fetch('${url}${qStr}', {\n${opts.join(",\n")}\n});\nconst data = await res.json();\nconsole.log(data);`;
+        }
+        if (lang === "python") {
+          const pyBody = bodyStr
+            ? bodyStr
+                .replace(/null/g, "None")
+                .replace(/true/g, "True")
+                .replace(/false/g, "False")
+            : null;
+          return [
+            `import requests`,
+            ``,
+            `url = "${url}${qStr}"`,
+            `headers = {\n    "X-API-Key": "YOUR_API_KEY",${hasBody ? '\n    "Content-Type": "application/json",' : ""}`,
+            `}`,
+            ...(pyBody ? [``, `payload = ${pyBody}`, ``] : [``]),
+            `response = requests.${method}(url, headers=headers${hasBody ? ", json=payload" : isMP ? ', files={"file": open("/path/to/file","rb")}' : ""})`,
+            `print(response.json())`,
+          ].join("\n");
+        }
+        if (lang === "php") {
+          const hdrs = `"X-API-Key: " . $apiKey${hasBody ? ',\n    "Content-Type: application/json"' : ""}`;
+          return [
+            `<?php`,
+            ``,
+            `$url    = "${url}${qStr}";`,
+            `$apiKey = "YOUR_API_KEY";`,
+            ``,
+            `$ch = curl_init($url);`,
+            `curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);`,
+            `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "${M}");`,
+            `curl_setopt($ch, CURLOPT_HTTPHEADER, [\n    ${hdrs}\n]);`,
+            ...(hasBody
+              ? [
+                  ``,
+                  `$payload = json_encode(${bodyStr});`,
+                  `curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);`,
+                ]
+              : []),
+            ``,
+            `$response = curl_exec($ch);`,
+            `curl_close($ch);`,
+            ``,
+            `$data = json_decode($response, true);`,
+            `print_r($data);`,
+          ].join("\n");
+        }
+        if (lang === "go") {
+          const imp = hasBody
+            ? `"bytes"\n\t"encoding/json"\n\t"fmt"\n\t"io"\n\t"net/http"`
+            : `"fmt"\n\t"io"\n\t"net/http"`;
+          const bLines = hasBody
+            ? [
+                `\tpayload := map[string]interface{}{`,
+                ...Object.entries(body || {}).map(
+                  ([k, v]) => `\t\t"${k}": ${JSON.stringify(v)},`,
+                ),
+                `\t}`,
+                `\tjsonData, _ := json.Marshal(payload)`,
+                `\treq, _ := http.NewRequest("${M}", url, bytes.NewBuffer(jsonData))`,
+              ]
+            : [`\treq, _ := http.NewRequest("${M}", url, nil)`];
+          return [
+            `package main`,
+            ``,
+            `import (\n\t${imp}\n)`,
+            ``,
+            `func main() {`,
+            `\turl := "${url}${qStr}"`,
+            ``,
+            ...bLines,
+            `\treq.Header.Set("X-API-Key", "YOUR_API_KEY")`,
+            ...(hasBody
+              ? [`\treq.Header.Set("Content-Type", "application/json")`]
+              : []),
+            ``,
+            `\tclient := &http.Client{}`,
+            `\tresp, err := client.Do(req)`,
+            `\tif err != nil { panic(err) }`,
+            `\tdefer resp.Body.Close()`,
+            ``,
+            `\tbody, _ := io.ReadAll(resp.Body)`,
+            `\tfmt.Println(string(body))`,
+            `}`,
+          ].join("\n");
+        }
+        if (lang === "rust") {
+          const bLines = hasBody
+            ? [
+                `    let payload = serde_json::json!(${bodyStr});`,
+                ``,
+                `    let res = client.${method}(&url)`,
+                `        .header("X-API-Key", "YOUR_API_KEY")`,
+                `        .json(&payload)`,
+                `        .send().await?;`,
+              ]
+            : [
+                `    let res = client.${method}(&url)`,
+                `        .header("X-API-Key", "YOUR_API_KEY")`,
+                `        .send().await?;`,
+              ];
+          return [
+            `use reqwest;`,
+            ``,
+            `#[tokio::main]`,
+            `async fn main() -> Result<(), Box<dyn std::error::Error>> {`,
+            `    let client = reqwest::Client::new();`,
+            `    let url = "${url}${qStr}";`,
+            ``,
+            ...bLines,
+            ``,
+            `    let data: serde_json::Value = res.json().await?;`,
+            `    println!("{:#?}", data);`,
+            ``,
+            `    Ok(())`,
+            `}`,
+          ].join("\n");
+        }
+        return "";
+      }
+
+      function CopyBtn({ text }) {
+        const [ok, setOk] = useState(false);
+        const copy = () => {
+          navigator.clipboard.writeText(text).catch(() => {});
+          setOk(true);
+          setTimeout(() => setOk(false), 1800);
+        };
+        return h(
+          "button",
+          { onClick: copy, className: `copy-btn${ok ? " ok" : ""}` },
+          h("i", { className: `fa ${ok ? "fa-check" : "fa-copy"}` }),
+          ok ? "Copied!" : "Copy",
+        );
+      }
+
+      function CodeEditor({ value, onChange }) {
+        const editorRef = useRef(null);
+        const codeMirrorRef = useRef(null);
+        const [error, setError] = useState(null);
+
+        const validateJson = (text) => {
+          if (!text || text.trim() === "") {
+            setError(null);
+            return null;
+          }
+          try {
+            JSON.parse(text);
+            setError(null);
+            return null;
+          } catch (e) {
+            const match = e.message.match(/position (\d+)/);
+            const pos = match ? parseInt(match[1]) : null;
+            const errorInfo = {
+              message: e.message,
+              position: pos,
+            };
+            setError(errorInfo);
+            return errorInfo;
+          }
+        };
+
+        const markError = (err) => {
+          if (!codeMirrorRef.current) return;
+          const cm = codeMirrorRef.current;
+          cm.clearGutter("error-gutter");
+          cm.getAllMarks().forEach((m) => m.clear());
+
+          if (err && err.position !== null) {
+            const pos = cm.posFromIndex(err.position);
+            if (pos) {
+              cm.markText(
+                { line: pos.line, ch: pos.ch },
+                { line: pos.line, ch: pos.ch + 1 },
+                {
+                  className: "cm-json-error",
+                  attributes: { title: err.message },
+                },
+              );
+              cm.setGutterMarker(
+                pos.line,
+                "error-gutter",
+                (() => {
+                  const marker = document.createElement("div");
+                  marker.style.color = "#e05c4b";
+                  marker.innerHTML = "●";
+                  marker.title = err.message;
+                  return marker;
+                })(),
+              );
+            }
+          }
+        };
+
+        useEffect(() => {
+          if (!editorRef.current) return;
+
+          codeMirrorRef.current = window.CodeMirror.fromTextArea(
+            editorRef.current,
+            {
+              mode: { name: "javascript", json: true },
+              theme: "atom-one-dark",
+              lineNumbers: false,
+              gutters: ["error-gutter"],
+              autoCloseBrackets: true,
+              matchBrackets: true,
+              indentUnit: 2,
+              tabSize: 2,
+              lineWrapping: true,
+              viewportMargin: Infinity,
+              extraKeys: {
+                Tab: (cm) => {
+                  if (cm.somethingSelected()) {
+                    cm.indentSelection("add");
+                  } else {
+                    cm.replaceSelection("  ", "end");
+                  }
+                },
+              },
+            },
+          );
+
+          codeMirrorRef.current.on("change", (instance) => {
+            const newValue = instance.getValue();
+            onChange(newValue);
+            const err = validateJson(newValue);
+            markError(err);
+          });
+
+          return () => {
+            if (codeMirrorRef.current) {
+              codeMirrorRef.current.toTextArea();
+              codeMirrorRef.current = null;
+            }
+          };
+        }, []);
+
+        useEffect(() => {
+          if (
+            codeMirrorRef.current &&
+            value !== codeMirrorRef.current.getValue()
+          ) {
+            codeMirrorRef.current.setValue(value);
+          }
+        }, [value]);
+
+        return h(
+          "div",
+          null,
+          h(
+            "div",
+            { className: "code-editor-wrapper" },
+            h("textarea", { ref: editorRef, defaultValue: value }),
+          ),
+          error &&
+            h(
+              "div",
+              { className: "json-error-hint" },
+              h("i", {
+                className: "fa fa-circle-exclamation",
+              }),
+              `Invalid JSON: ${error.message}`,
+            ),
+        );
+      }
+
+      function HljsCode({ code, lang }) {
+        const ref = useRef(null);
+        useEffect(() => {
+          if (!ref.current || !window.hljs) return;
+          ref.current.removeAttribute("data-highlighted");
+          ref.current.textContent = code;
+          window.hljs.highlightElement(ref.current);
+        }, [code, lang]);
+        return h("code", { ref, className: `language-${lang}` });
+      }
+
+      function CodeBlock({ code, lang, label }) {
+        return h(
+          "div",
+          { className: "code-wrap" },
+          h(
+            "div",
+            { className: "code-hd" },
+            h("span", { className: "code-hd-lbl" }, label),
+            h(CopyBtn, { text: code }),
+          ),
+          h("pre", null, h(HljsCode, { code, lang })),
+        );
+      }
+
+      function MethodBadge({ method }) {
+        return h(
+          "span",
+          { className: `method-badge m-${method} mb-${method}` },
+          method.toUpperCase(),
+        );
+      }
+
+      function ParamsTable({ params }) {
+        if (!params?.length) return null;
+        return h(
+          "div",
+          { style: { marginBottom: 20 } },
+          h("div", { className: "sec-lbl" }, "Parameters"),
+          h(
+            "div",
+            { className: "params-tbl" },
+            params.map((p, i) =>
+              h(
+                "div",
+                { key: i, className: "p-row" },
+                h(
+                  "div",
+                  { className: "p-name" },
+                  p.name,
+                  p.required && h("span", { className: "p-req" }, " *"),
+                ),
+                h(
+                  "div",
+                  { className: "p-meta" },
+                  h("span", { className: "p-in" }, p.in),
+                  p.schema?.type &&
+                    h(
+                      "span",
+                      { className: "p-type" },
+                      Array.isArray(p.schema.type)
+                        ? p.schema.type[0]
+                        : p.schema.type,
+                    ),
+                ),
+                h(
+                  "div",
+                  { className: "p-desc" },
+                  p.description || "",
+                  p.example !== undefined &&
+                    h(
+                      "div",
+                      {
+                        style: {
+                          fontSize: 11,
+                          color: "var(--t3)",
+                          marginTop: 2,
+                        },
+                      },
+                      `e.g. "${p.example}"`,
+                    ),
+                  p.schema?.enum &&
+                    h(
+                      "div",
+                      { style: { marginTop: 5 } },
+                      p.schema.enum.map((v) =>
+                        h(
+                          "span",
+                          {
+                            key: v,
+                            className: "enum-chip",
+                          },
+                          v,
+                        ),
+                      ),
+                    ),
+                  p.schema?.default !== undefined &&
+                    h(
+                      "div",
+                      {
+                        style: {
+                          fontSize: 11,
+                          color: "var(--t3)",
+                          marginTop: 2,
+                        },
+                      },
+                      `default: ${p.schema.default}`,
+                    ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      function RequestBodyPanel({ op, spec }) {
+        if (!op.requestBody) return null;
+
+        // Handle requestBody $ref at the top level
+        let requestBody = op.requestBody;
+        if (op.requestBody.$ref) {
+          requestBody = resolveRef(op.requestBody.$ref, spec) || op.requestBody;
+        }
+
+        const content = requestBody.content || {};
+        const isMP = !!content["multipart/form-data"];
+        const jsonCt = content["application/json"];
+
+        // Get schema - could be directly on jsonCt or nested
+        let schema = null;
+        if (jsonCt) {
+          if (jsonCt.schema?.$ref) {
+            schema = resolveRef(jsonCt.schema.$ref, spec);
+          } else if (jsonCt.schema) {
+            schema = jsonCt.schema;
+          }
+        }
+
+        const example = getBodyEx(op, spec);
+
+        // Handle allOf composition by merging properties
+        if (schema?.allOf && Array.isArray(schema.allOf)) {
+          const merged = { properties: {}, required: [] };
+          schema.allOf.forEach((s) => {
+            const resolved = s.$ref ? resolveRef(s.$ref, spec) : s;
+            if (resolved?.properties) {
+              Object.assign(merged.properties, resolved.properties);
+            }
+            if (resolved?.required) {
+              merged.required.push(...resolved.required);
+            }
+          });
+          schema = { ...schema, ...merged };
+        }
+
+        // Handle oneOf/anyOf by using the first schema as a hint
+        if (!schema?.properties && (schema?.oneOf || schema?.anyOf)) {
+          const first = schema.oneOf?.[0] || schema.anyOf?.[0];
+          if (first) {
+            schema = first.$ref ? resolveRef(first.$ref, spec) : first;
+          }
+        }
+
+        // If schema is still just a $ref, resolve it
+        if (schema && !schema.properties && schema.$ref) {
+          schema = resolveRef(schema.$ref, spec) || schema;
+        }
+
+        return h(
+          "div",
+          { style: { marginBottom: 20 } },
+          h(
+            "div",
+            { className: "rb-hd" },
+            h(
+              "div",
+              {
+                className: "sec-lbl",
+                style: { marginBottom: 0 },
+              },
+              "Request Body",
+            ),
+            requestBody.required &&
+              h("span", { className: "rb-req" }, "required"),
+          ),
+          isMP &&
+            h(
+              "div",
+              { className: "mp-note" },
+              h("i", {
+                className: "fa fa-paperclip",
+                style: {
+                  color: "var(--orange)",
+                  marginRight: 6,
+                },
+              }),
+              "multipart/form-data — send files as form data",
+            ),
+          schema?.properties &&
+            h(
+              "div",
+              {
+                className: "params-tbl",
+                style: { marginBottom: 12 },
+              },
+              Object.entries(schema.properties).map(([name, prop]) => {
+                const r = prop.$ref
+                  ? resolveRef(prop.$ref, spec) || prop
+                  : prop;
+                const t = Array.isArray(r.type) ? r.type[0] : r.type;
+                return h(
+                  "div",
+                  { key: name, className: "p-row" },
+                  h(
+                    "div",
+                    { className: "p-name" },
+                    name,
+                    (schema.required || []).includes(name) &&
+                      h("span", { className: "p-req" }, " *"),
+                  ),
+                  h(
+                    "div",
+                    { className: "p-meta" },
+                    h("span", { className: "p-type" }, t || "—"),
+                  ),
+                  h(
+                    "div",
+                    { className: "p-desc" },
+                    r.description || "",
+                    r.enum &&
+                      h(
+                        "div",
+                        { style: { marginTop: 5 } },
+                        r.enum.map((v) =>
+                          h(
+                            "span",
+                            {
+                              key: v,
+                              className: "enum-chip",
+                            },
+                            v,
+                          ),
+                        ),
+                      ),
+                  ),
+                );
+              }),
+            ),
+          example &&
+            h(CodeBlock, {
+              code: JSON.stringify(example, null, 2),
+              lang: "json",
+              label: "Example Request",
+            }),
+        );
+      }
+
+      function ResponsesPanel({ responses }) {
+        const codes = Object.keys(responses || {});
+        const [active, setActive] = useState(codes[0]);
+        if (!codes.length) return null;
+        const resp = responses[active];
+        const example = resp?.content?.["application/json"]?.example;
+        return h(
+          "div",
+          { style: { marginBottom: 20 } },
+          h("div", { className: "sec-lbl" }, "Responses"),
+          h(
+            "div",
+            { className: "resp-tabs" },
+            codes.map((c) =>
+              h(
+                "button",
+                {
+                  key: c,
+                  onClick: () => setActive(c),
+                  className: `resp-tab ${active === c ? "on" : ""} ${sCls(c)}`,
+                },
+                c,
+              ),
+            ),
+          ),
+          h(
+            "div",
+            { className: "resp-box" },
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  marginBottom: example ? 12 : 0,
+                },
+              },
+              h(
+                "span",
+                {
+                  className: sCls(active),
+                  style: {
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    fontSize: 15,
+                  },
+                },
+                active,
+              ),
+              h("span", { style: { color: "var(--t2)" } }, resp?.description),
+            ),
+            example &&
+              h(CodeBlock, {
+                code: JSON.stringify(example, null, 2),
+                lang: "json",
+                label: "Example Response",
+              }),
+          ),
+        );
+      }
+
+      function ResponseDisplay({ response, loading }) {
+        const [respTab, setRespTab] = useState("body");
+        if (loading) {
+          return h(
+            "div",
+            { className: "response-area" },
+            h(
+              "div",
+              { className: "response-hd" },
+              h(
+                "div",
+                { className: "response-ttl" },
+                h("i", { className: "fa fa-server" }),
+                "Response",
+              ),
+            ),
+            h(
+              "div",
+              {
+                style: {
+                  padding: "40px 0",
+                  textAlign: "center",
+                  color: "var(--t3)",
+                },
+              },
+              h("i", {
+                className: "fa fa-spinner fa-spin",
+                style: { marginRight: 8 },
+              }),
+              "Awaiting response...",
+            ),
+          );
+        }
+        if (!response) {
+          return h(
+            "div",
+            { className: "response-area" },
+            h(
+              "div",
+              { className: "response-hd" },
+              h(
+                "div",
+                { className: "response-ttl" },
+                h("i", { className: "fa fa-server" }),
+                "Response",
+              ),
+            ),
+            h(
+              "div",
+              {
+                style: {
+                  padding: "40px 0",
+                  textAlign: "center",
+                  color: "var(--t3)",
+                  background: "var(--bg-card)",
+                  borderRadius: "8px",
+                  border: "1px dashed var(--bd)",
+                  fontSize: "13px",
+                },
+              },
+              h(
+                "div",
+                { className: "empty-response" },
+                h("i", { className: "fa fa-wifi", style: { marginRight: 8 } }),
+                "Click 'Send Request' to test the API",
+              ),
+            ),
+          );
+        }
+
+        const statusClass =
+          response.status >= 200 && response.status < 300
+            ? "success"
+            : response.status >= 400
+              ? "error"
+              : "info";
+
+        const responseJson = JSON.stringify(response.data, null, 2);
+
+        return h(
+          "div",
+          { className: "response-area" },
+          h(
+            "div",
+            { className: "response-hd" },
+            h(
+              "div",
+              { className: "response-ttl" },
+              h("i", { className: "fa fa-server" }),
+              "Response",
+            ),
+            h(
+              "span",
+              {
+                className: `response-status ${statusClass}`,
+              },
+              `${response.status} ${response.statusText || ""}`,
+            ),
+          ),
+          h(
+            "div",
+            {
+              className: "resp-tabs",
+              style: {
+                margin: "12px 0",
+                padding: "0 4px",
+                borderBottom: "1px solid var(--bd-sub)",
+              },
+            },
+            h(
+              "button",
+              {
+                className: `resp-tab ${respTab === "body" ? "on" : ""}`,
+                onClick: () => setRespTab("body"),
+                style: {
+                  fontSize: "11px",
+                  padding: "6px 12px",
+                },
+              },
+              "Body",
+            ),
+            h(
+              "button",
+              {
+                className: `resp-tab ${respTab === "header" ? "on" : ""}`,
+                onClick: () => setRespTab("header"),
+                style: {
+                  fontSize: "11px",
+                  padding: "6px 12px",
+                },
+              },
+              "Headers",
+            ),
+          ),
+          respTab === "body"
+            ? h(
+                "div",
+                { className: "code-wrap", style: { marginBottom: 0 } },
+                h(
+                  "div",
+                  { className: "code-hd" },
+                  h("span", { className: "code-hd-lbl" }, "JSON Response"),
+                  h(CopyBtn, { text: responseJson }),
+                ),
+                h(
+                  "pre",
+                  { className: "response-pre" },
+                  h(HljsCode, { code: responseJson, lang: "json" }),
+                ),
+              )
+            : h(
+                "div",
+                { className: "code-wrap", style: { marginBottom: 0 } },
+                h(
+                  "div",
+                  { className: "code-hd" },
+                  h("span", { className: "code-hd-lbl" }, "Response Headers"),
+                  h(CopyBtn, {
+                    text: JSON.stringify(response.headers, null, 2),
+                  }),
+                ),
+                h(
+                  "pre",
+                  { className: "response-pre" },
+                  h(HljsCode, {
+                    code: JSON.stringify(response.headers, null, 2),
+                    lang: "json",
+                  }),
+                ),
+              ),
+        );
+      }
+
+      function CodeSamples({
+        ep,
+        spec,
+        apiKey,
+        bearerToken,
+        authType,
+        baseUrl,
+        setApiKey,
+        setBearerToken,
+        setAuthType,
+        showApiKey,
+        setShowApiKey,
+        showBearer,
+        setShowBearer,
+      }) {
+        const [lang, setLang] = useState("curl");
+        const [activeTab, setActiveTab] = useState("samples");
+        const code = useMemo(() => genCode(lang, ep, spec), [lang, ep, spec]);
+        const info = LANGS.find((l) => l.id === lang);
+        const [params, setParams] = useState({});
+        const [bodyText, setBodyText] = useState("");
+        const [selectedFiles, setSelectedFiles] = useState({});
+        const [response, setResponse] = useState(null);
+        const [loading, setLoading] = useState(false);
+
+        const queryParams = (ep.op.parameters || []).filter(
+          (p) => p.in === "query",
+        );
+        const pathParams = (ep.op.parameters || []).filter(
+          (p) => p.in === "path",
+        );
+        const bodyExample = getBodyEx(ep.op, spec);
+
+        const securityRequirements = ep.op.security || spec.security || [];
+        const securitySchemes = spec.components?.securitySchemes || {};
+
+        const requiredSchemes = useMemo(() => {
+          const schemes = [];
+          securityRequirements.forEach((req) => {
+            Object.keys(req).forEach((name) => {
+              const scheme = securitySchemes[name];
+              if (scheme) {
+                schemes.push({ name, ...scheme });
+              } else if (name === "bearer_auth") {
+                // Fallback for common naming if not in components
+                schemes.push({
+                  name,
+                  type: "http",
+                  scheme: "bearer",
+                });
+              } else if (name === "api_key") {
+                schemes.push({
+                  name,
+                  type: "apiKey",
+                  in: "header",
+                  name: "X-API-Key",
+                });
+              }
+            });
+          });
+          return schemes;
+        }, [securityRequirements, securitySchemes]);
+
+        const hasApiKey = requiredSchemes.some(
+          (s) =>
+            s.type === "apiKey" || (s.type === "http" && s.scheme === "basic"),
+        );
+        const hasBearer = requiredSchemes.some(
+          (s) =>
+            (s.type === "http" && s.scheme === "bearer") ||
+            s.type === "oauth2" ||
+            s.type === "openIdConnect",
+        );
+        const isSecurityRequired = requiredSchemes.length > 0;
+
+        useEffect(() => {
+          if (hasApiKey && !hasBearer) setAuthType("api_key");
+          else if (hasBearer && !hasApiKey) setAuthType("bearer");
+        }, [hasApiKey, hasBearer]);
+
+        const multipartContent =
+          ep.op.requestBody?.content?.["multipart/form-data"];
+        const isMultipart = !!multipartContent;
+        const multipartSchema = multipartContent?.schema;
+        const fileFields =
+          isMultipart && multipartSchema?.properties
+            ? Object.entries(multipartSchema.properties).filter(
+                ([, prop]) =>
+                  prop.type === "string" && prop.format === "binary",
+              )
+            : [];
+
+        useEffect(() => {
+          if (bodyExample) {
+            setBodyText(JSON.stringify(bodyExample, null, 2));
+          }
+        }, [ep.id]);
+
+        useEffect(() => {
+          setParams({});
+          setResponse(null);
+          setSelectedFiles({});
+        }, [ep.id]);
+
+        const buildUrl = () => {
+          let url = baseUrl + ep.path;
+          pathParams.forEach((p) => {
+            const val = params[p.name] || `{${p.name}}`;
+            url = url.replace(`{${p.name}}`, val);
+          });
+          const qParams = Object.entries(params).filter(
+            ([key]) => !pathParams.find((p) => p.name === key),
+          );
+          if (qParams.length) {
+            url +=
+              "?" +
+              qParams
+                .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+                .join("&");
+          }
+          return url;
+        };
+
+        const sendRequest = async () => {
+          setLoading(true);
+          setResponse(null);
+          const url = buildUrl();
+
+          if (isMultipart && fileFields.length > 0) {
+            const formData = new FormData();
+
+            fileFields.forEach(([fieldName]) => {
+              const file = selectedFiles[fieldName];
+              if (file) {
+                formData.append(fieldName, file);
+              }
+            });
+
+            const headers = {};
+            if (isSecurityRequired) {
+              if (authType === "api_key" && apiKey) {
+                const scheme = requiredSchemes.find(
+                  (s) =>
+                    s.type === "apiKey" ||
+                    (s.type === "http" && s.scheme === "basic"),
+                );
+                const headerName = scheme?.name || "X-API-Key";
+                headers[headerName] = apiKey;
+              } else if (authType === "bearer" && bearerToken) {
+                headers["Authorization"] = `Bearer ${bearerToken}`;
+              }
+            }
+            // Note: Don't set Content-Type for FormData, browser sets it with boundary
+
+            const options = {
+              method: ep.method.toUpperCase(),
+              headers,
+              body: formData,
+            };
+
+            try {
+              const res = await fetch(url, options);
+              const data = await res.json().catch(() => res.text());
+              const headers = {};
+              res.headers.forEach((v, k) => {
+                headers[k] = v;
+              });
+              setResponse({
+                status: res.status,
+                statusText: res.statusText,
+                data: typeof data === "string" ? { raw: data } : data,
+                headers,
+              });
+            } catch (e) {
+              setResponse({
+                status: 0,
+                statusText: "Network Error",
+                data: {
+                  error: "Failed to send request",
+                  details: e.message,
+                },
+              });
+            } finally {
+              setLoading(false);
+            }
+            return;
+          }
+
+          const headers = {
+            "Content-Type": "application/json",
+          };
+          if (isSecurityRequired) {
+            if (authType === "api_key" && apiKey) {
+              const scheme = requiredSchemes.find(
+                (s) =>
+                  s.type === "apiKey" ||
+                  (s.type === "http" && s.scheme === "basic"),
+              );
+              const headerName = scheme?.name || "X-API-Key";
+              headers[headerName] = apiKey;
+            } else if (authType === "bearer" && bearerToken) {
+              headers["Authorization"] = `Bearer ${bearerToken}`;
+            }
+          }
+          const options = {
+            method: ep.method.toUpperCase(),
+            headers,
+          };
+          if (
+            ep.method.toLowerCase() !== "get" &&
+            ep.method.toLowerCase() !== "head" &&
+            bodyText
+          ) {
+            try {
+              options.body = JSON.parse(bodyText);
+            } catch (e) {
+              setLoading(false);
+              setResponse({
+                status: 400,
+                statusText: "Invalid JSON",
+                data: {
+                  error: "Request body is not valid JSON",
+                  details: e.message,
+                },
+              });
+              return;
+            }
+          }
+          try {
+            const res = await fetch(url, options);
+            const data = await res.json().catch(() => res.text());
+            const headers = {};
+            res.headers.forEach((v, k) => {
+              headers[k] = v;
+            });
+            setResponse({
+              status: res.status,
+              statusText: res.statusText,
+              data: typeof data === "string" ? { raw: data } : data,
+              headers,
+            });
+          } catch (e) {
+            setResponse({
+              status: 0,
+              statusText: "Network Error",
+              data: {
+                error: "Failed to send request",
+                details: e.message,
+              },
+            });
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        const updateParam = (name, value) => {
+          setParams((prev) => ({ ...prev, [name]: value }));
+        };
+
+        const statusClass = response
+          ? response.status >= 200 && response.status < 300
+            ? "success"
+            : response.status >= 400
+              ? "error"
+              : "info"
+          : "";
+        return h(
+          "div",
+          { style: { marginBottom: 20 } },
+          h("div", { className: "sec-lbl" }, "Code Samples"),
+          h(
+            "div",
+            { className: "test-tabs", style: { marginBottom: 12 } },
+            h(
+              "button",
+              {
+                className: `test-tab ${activeTab === "samples" ? "on" : ""}`,
+                onClick: () => setActiveTab("samples"),
+              },
+              h("i", {
+                className: "fa fa-code test-tab-icon",
+              }),
+              "Samples",
+            ),
+            h(
+              "button",
+              {
+                className: `test-tab ${activeTab === "tryit" ? "on" : ""}`,
+                onClick: () => setActiveTab("tryit"),
+              },
+              h("i", {
+                className: "fa fa-flask test-tab-icon",
+              }),
+              "Try It",
+            ),
+          ),
+          activeTab === "samples" &&
+            h(
+              "div",
+              null,
+              h(
+                "div",
+                { className: "code-wrap" },
+                h(
+                  "div",
+                  { className: "lang-tabs" },
+                  LANGS.map((l) =>
+                    h(
+                      "button",
+                      {
+                        key: l.id,
+                        onClick: () => setLang(l.id),
+                        className: `lang-tab ${lang === l.id ? "on" : ""}`,
+                      },
+                      h("i", {
+                        className: l.fa,
+                        style: { fontSize: 13 },
+                      }),
+                      l.label,
+                    ),
+                  ),
+                ),
+                h(
+                  "div",
+                  { className: "code-hd" },
+                  h(
+                    "span",
+                    { className: "code-hd-lbl" },
+                    `${info?.label} example`,
+                  ),
+                  h(CopyBtn, { text: code }),
+                ),
+                h(
+                  "pre",
+                  null,
+                  h(HljsCode, {
+                    code,
+                    lang: info?.hl || "bash",
+                  }),
+                ),
+              ),
+            ),
+          activeTab === "tryit" &&
+            h(
+              "div",
+              { className: "test-panel" },
+              h(
+                "div",
+                { className: "test-panel-hd" },
+                h(
+                  "div",
+                  { className: "test-panel-ttl" },
+                  h("i", { className: "fa fa-flask" }),
+                  "Test This Endpoint",
+                ),
+                h(
+                  "button",
+                  {
+                    className: `btn-test ${loading ? "loading" : ""}`,
+                    onClick: sendRequest,
+                    disabled: loading,
+                  },
+                  h("i", {
+                    className: loading
+                      ? "fa fa-spinner fa-spin"
+                      : "fa fa-paper-plane",
+                  }),
+                  loading ? "Sending..." : "Send Request",
+                ),
+              ),
+              h(
+                "div",
+                { className: "test-url" },
+                h(
+                  "span",
+                  {
+                    className: `test-method m-${ep.method} mb-${ep.method}`,
+                  },
+                  ep.method.toUpperCase(),
+                ),
+                buildUrl(),
+              ),
+              h(
+                "div",
+                { style: { marginBottom: 12 } },
+                [...pathParams, ...queryParams].length > 0
+                  ? [...pathParams, ...queryParams].map((p) =>
+                      h(
+                        "div",
+                        {
+                          key: p.name,
+                          className: "param-input-row",
+                        },
+                        h(
+                          "div",
+                          { className: "param-label" },
+                          p.name,
+                          p.required &&
+                            h(
+                              "span",
+                              {
+                                style: {
+                                  color: "var(--red)",
+                                },
+                              },
+                              " *",
+                            ),
+                        ),
+                        h("input", {
+                          className: "param-input",
+                          type: "text",
+                          placeholder: p.example || p.description || "",
+                          value: params[p.name] || "",
+                          onChange: (e) => updateParam(p.name, e.target.value),
+                        }),
+                        h(
+                          "div",
+                          { className: "param-type" },
+                          Array.isArray(p.schema?.type)
+                            ? p.schema.type.join(" | ")
+                            : p.schema?.type || "string",
+                        ),
+                      ),
+                    )
+                  : h(
+                      "div",
+                      {
+                        style: {
+                          color: "var(--t3)",
+                          fontSize: 12,
+                          textAlign: "center",
+                          padding: "20px 0",
+                        },
+                      },
+                      h("i", {
+                        className: "fa fa-info-circle",
+                        style: { marginRight: 6 },
+                      }),
+                      "No parameters for this endpoint",
+                    ),
+              ),
+              isSecurityRequired &&
+                h(
+                  "div",
+                  { className: "auth-header-input" },
+                  h(
+                    "div",
+                    {
+                      className: "auth-header-label",
+                      style: {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        width: "100%",
+                      },
+                    },
+                    h(
+                      "div",
+                      {
+                        style: {
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                        },
+                      },
+                      h("i", { className: "fa fa-key" }),
+                      "Authorization",
+                    ),
+                    hasApiKey &&
+                      hasBearer &&
+                      h(
+                        "div",
+                        {
+                          style: {
+                            display: "flex",
+                            gap: 4,
+                          },
+                        },
+                        h(
+                          "button",
+                          {
+                            className: `theme-btn ${authType === "api_key" ? "on" : ""}`,
+                            style: {
+                              width: "auto",
+                              padding: "4px 10px",
+                              fontSize: "11px",
+                            },
+                            onClick: () => setAuthType("api_key"),
+                            title: "API Key authentication",
+                          },
+                          "API Key",
+                        ),
+                        h(
+                          "button",
+                          {
+                            className: `theme-btn ${authType === "bearer" ? "on" : ""}`,
+                            style: {
+                              width: "auto",
+                              padding: "4px 10px",
+                              fontSize: "11px",
+                            },
+                            onClick: () => setAuthType("bearer"),
+                            title: "Bearer Token authentication",
+                          },
+                          "Bearer",
+                        ),
+                      ),
+                  ),
+                  authType === "api_key" && hasApiKey
+                    ? h(
+                        "div",
+                        {
+                          style: { marginTop: "8px", position: "relative" },
+                        },
+                        h("input", {
+                          type: showApiKey ? "text" : "password",
+                          placeholder: apiKey ? `API key set` : "Enter API key",
+                          value: apiKey,
+                          onChange: (e) => setApiKey(e.target.value),
+                          style: {
+                            width: "100%",
+                            paddingRight: "30px",
+                            marginBottom: apiKey ? "4px" : "0",
+                          },
+                        }),
+                        h("i", {
+                          className: `fa ${showApiKey ? "fa-eye-slash" : "fa-eye"}`,
+                          onClick: () => setShowApiKey(!showApiKey),
+                          style: {
+                            position: "absolute",
+                            right: "10px",
+                            top: "10px",
+                            fontSize: "12px",
+                            color: "var(--t3)",
+                            cursor: "pointer",
+                          },
+                        }),
+                        apiKey &&
+                          h(
+                            "div",
+                            {
+                              style: {
+                                fontSize: "10px",
+                                color: "var(--green)",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                              },
+                            },
+                            h("i", {
+                              className: "fa fa-check-circle",
+                            }),
+                            "API key stored in memory",
+                          ),
+                      )
+                    : authType === "bearer" && hasBearer
+                      ? h(
+                          "div",
+                          {
+                            style: { marginTop: "8px", position: "relative" },
+                          },
+                          h("input", {
+                            type: showBearer ? "text" : "password",
+                            placeholder: bearerToken
+                              ? `Token set`
+                              : "Enter Bearer token",
+                            value: bearerToken,
+                            onChange: (e) => setBearerToken(e.target.value),
+                            style: {
+                              width: "100%",
+                              paddingRight: "30px",
+                              marginBottom: bearerToken ? "4px" : "0",
+                            },
+                          }),
+                          h("i", {
+                            className: `fa ${showBearer ? "fa-eye-slash" : "fa-eye"}`,
+                            onClick: () => setShowBearer(!showBearer),
+                            style: {
+                              position: "absolute",
+                              right: "10px",
+                              top: "10px",
+                              fontSize: "12px",
+                              color: "var(--t3)",
+                              cursor: "pointer",
+                            },
+                          }),
+                          bearerToken &&
+                            h(
+                              "div",
+                              {
+                                style: {
+                                  fontSize: "10px",
+                                  color: "var(--green)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                },
+                              },
+                              h("i", {
+                                className: "fa fa-check-circle",
+                              }),
+                              "Token stored in memory",
+                            ),
+                        )
+                      : null,
+                ),
+              // Show file inputs for multipart/form-data
+              isMultipart && fileFields.length > 0
+                ? h(
+                    "div",
+                    { style: { marginBottom: 12 } },
+                    h(
+                      "div",
+                      {
+                        style: {
+                          fontSize: 11,
+                          fontWeight: 600,
+                          color: "var(--t3)",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          marginBottom: 8,
+                        },
+                      },
+                      "File Upload",
+                    ),
+                    h(
+                      "div",
+                      {
+                        style: {
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px",
+                        },
+                      },
+                      fileFields.map(([fieldName, prop]) =>
+                        h(
+                          "div",
+                          {
+                            key: fieldName,
+                            style: {
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "4px",
+                            },
+                          },
+                          h(
+                            "label",
+                            {
+                              style: {
+                                fontSize: 12,
+                                color: "var(--t2)",
+                                fontWeight: 500,
+                              },
+                            },
+                            fieldName,
+                            prop.description &&
+                              h(
+                                "span",
+                                {
+                                  style: {
+                                    color: "var(--t3)",
+                                    fontWeight: 400,
+                                    marginLeft: "4px",
+                                  },
+                                },
+                                " - " + prop.description,
+                              ),
+                          ),
+                          h("input", {
+                            type: "file",
+                            className: "param-input",
+                            style: {
+                              padding: "6px 10px",
+                              cursor: "pointer",
+                            },
+                            onChange: (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                setSelectedFiles((prev) => ({
+                                  ...prev,
+                                  [fieldName]: file,
+                                }));
+                              }
+                            },
+                          }),
+                          selectedFiles[fieldName] &&
+                            h(
+                              "div",
+                              {
+                                style: {
+                                  fontSize: 11,
+                                  color: "var(--green)",
+                                },
+                              },
+                              h("i", {
+                                className: "fa fa-check-circle",
+                                style: {
+                                  marginRight: 4,
+                                },
+                              }),
+                              selectedFiles[fieldName].name +
+                                " (" +
+                                (selectedFiles[fieldName].size / 1024).toFixed(
+                                  2,
+                                ) +
+                                " KB)",
+                            ),
+                        ),
+                      ),
+                    ),
+                  )
+                : // Show JSON editor for non-multipart requests
+                  (ep.method.toLowerCase() === "post" ||
+                    ep.method.toLowerCase() === "put" ||
+                    ep.method.toLowerCase() === "patch") &&
+                    bodyExample &&
+                    h(
+                      "div",
+                      { style: { marginBottom: 12 } },
+                      h(
+                        "div",
+                        {
+                          style: {
+                            fontSize: 11,
+                            fontWeight: 600,
+                            color: "var(--t3)",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.08em",
+                            marginBottom: 8,
+                          },
+                        },
+                        "Request Body",
+                      ),
+                      h(CodeEditor, {
+                        value: bodyText,
+                        onChange: setBodyText,
+                      }),
+                    ),
+              h(ResponseDisplay, { response, loading }),
+            ),
+        );
+      }
+
+      function EndpointDetail({
+        ep,
+        spec,
+        apiKey,
+        bearerToken,
+        authType,
+        baseUrl,
+        setApiKey,
+        setBearerToken,
+        setAuthType,
+        showApiKey,
+        setShowApiKey,
+        showBearer,
+        setShowBearer,
+      }) {
+        if (!ep)
+          return h(
+            "div",
+            { className: "empty" },
+            h("i", { className: "fa fa-book-open" }),
+            h("p", null, "Select an endpoint to view details"),
+          );
+        const { path, method, op } = ep;
+        return h(
+          "div",
+          { className: "fu", key: ep.id },
+          h(
+            "div",
+            { className: `ep-hdr` },
+            h(
+              "div",
+              { className: "ep-hdr-row" },
+
+              h(
+                "div",
+                { style: { flex: 1, minWidth: 0 } },
+                h("div", { className: "ep-summary" }, op.summary),
+                op.description &&
+                  h(
+                    "p",
+                    {
+                      style: {
+                        fontSize: 13,
+                        color: "var(--t2)",
+                        marginTop: 4,
+                      },
+                    },
+                    op.description,
+                  ),
+                h("code", { className: "ep-path-pill" }, path),
+                h(
+                  "div",
+                  {
+                    style: {
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      flexWrap: "wrap",
+                      marginTop: 10,
+                    },
+                  },
+                  h(MethodBadge, { method }),
+
+                  (op.security || spec.security) &&
+                    h(
+                      "span",
+                      { className: "auth-pill" },
+                      h("i", {
+                        className: "fa fa-key",
+                        style: { fontSize: 9 },
+                      }),
+                      " Auth required",
+                    ),
+                ),
+              ),
+            ),
+          ),
+          h(
+            "div",
+            { className: "ep-body" },
+            h(ParamsTable, { params: op.parameters }),
+            h(RequestBodyPanel, { op, spec }),
+            h(CodeSamples, {
+              ep,
+              spec,
+              apiKey,
+              bearerToken,
+              authType,
+              baseUrl,
+              setApiKey,
+              setBearerToken,
+              setAuthType,
+              showApiKey,
+              setShowApiKey,
+              showBearer,
+              setShowBearer,
+            }),
+            h(ResponsesPanel, { responses: op.responses }),
+          ),
+        );
+      }
+
+      function Sidebar({
+        spec,
+        endpoints,
+        activeId,
+        onSelect,
+        search,
+        onSearch,
+        theme,
+        onTheme,
+      }) {
+        const grouped = useMemo(
+          () => groupByTag(endpoints, spec.tags),
+          [endpoints, spec.tags],
+        );
+        const [expandedTag, setExpandedTag] = useState(null);
+        const [showThemeMenu, setShowThemeMenu] = useState(false);
+
+        useEffect(() => {
+          if (!showThemeMenu) return;
+          const handleClickOutside = () => setShowThemeMenu(false);
+          document.addEventListener("click", handleClickOutside);
+          return () =>
+            document.removeEventListener("click", handleClickOutside);
+        }, [showThemeMenu]);
+
+        useEffect(() => {
+          if (activeId) {
+            for (const [tag, eps] of Object.entries(grouped)) {
+              if (eps.find((ep) => ep.id === activeId)) {
+                setExpandedTag(tag);
+                break;
+              }
+            }
+          } else if (Object.keys(grouped).length > 0) {
+            setExpandedTag(Object.keys(grouped)[0]);
+          }
+        }, [activeId, grouped]);
+
+        const toggleTag = (tag) => {
+          setExpandedTag(expandedTag === tag ? null : tag);
+        };
+
+        const themeOptions = [
+          { value: "light", icon: "fa-sun", label: "Light" },
+          { value: "dark", icon: "fa-moon", label: "Dark" },
+          {
+            value: "system",
+            icon: "fa-circle-half-stroke",
+            label: "System",
+          },
+        ];
+
+        const currentTheme =
+          themeOptions.find((t) => t.value === theme) || themeOptions[0];
+        return h(
+          Fragment,
+          null,
+          h(
+            "div",
+            { className: "sb-hdr" },
+            h(
+              "div",
+              { className: "sb-brand" },
+              spec.info?.["x-logo"]
+                ? h("img", {
+                    className: "sb-logo sb-logo-img",
+                    src: spec.info["x-logo"],
+                    alt: spec.info?.title || "Logo",
+                    style: {
+                      objectFit: "contain",
+                      padding: "0",
+                      background: "transparent",
+                    },
+                  })
+                : h(
+                    "div",
+                    { className: "sb-title" },
+                    spec.info?.title || "API Docs",
+                  ),
+            ),
+            h(
+              "div",
+              {
+                className: "sb-themes",
+                style: { position: "relative" },
+              },
+              h(
+                "button",
+                {
+                  className: "theme-btn",
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    setShowThemeMenu(!showThemeMenu);
+                  },
+                  title: `${currentTheme.label} theme (click to change)`,
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1px",
+                  },
+                },
+                h("i", {
+                  className: `fa ${currentTheme.icon}`,
+                }),
+              ),
+              showThemeMenu &&
+                h(
+                  "div",
+                  {
+                    className: "theme-dropdown",
+                    style: {
+                      position: "absolute",
+                      top: "100%",
+                      right: 0,
+                      marginTop: "4px",
+                      background: "var(--bg-card)",
+                      border: "1px solid var(--bd)",
+                      borderRadius: "6px",
+                      boxShadow: "var(--shadow-md)",
+                      zIndex: 100,
+                      minWidth: "120px",
+                      overflow: "hidden",
+                    },
+                    onClick: (e) => e.stopPropagation(),
+                  },
+                  themeOptions.map((opt) =>
+                    h(
+                      "button",
+                      {
+                        key: opt.value,
+                        className: "theme-dropdown-item",
+                        onClick: () => {
+                          onTheme(opt.value);
+                          setShowThemeMenu(false);
+                        },
+                        style: {
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "8px 12px",
+                          width: "100%",
+                          background:
+                            theme === opt.value
+                              ? "var(--accent-bg)"
+                              : "transparent",
+                          border: "none",
+                          borderBottom:
+                            theme === opt.value
+                              ? "none"
+                              : "1px solid var(--bd-sub)",
+                          color:
+                            theme === opt.value ? "var(--accent)" : "var(--t2)",
+                          fontSize: "12px",
+                          cursor: "pointer",
+                          transition: "all 0.15s",
+                          textAlign: "left",
+                        },
+                      },
+                      h("i", {
+                        className: `fa ${opt.icon}`,
+                        style: {
+                          fontSize: "12px",
+                          width: "14px",
+                        },
+                      }),
+                      h(
+                        "span",
+                        {
+                          style: {
+                            fontSize: "12px",
+                            fontWeight: theme === opt.value ? 600 : 400,
+                          },
+                        },
+                        opt.label,
+                      ),
+                      theme === opt.value &&
+                        h("i", {
+                          className: "fa fa-check",
+                          style: {
+                            marginLeft: "auto",
+                            fontSize: "11px",
+                          },
+                        }),
+                    ),
+                  ),
+                ),
+            ),
+          ),
+          h(
+            "div",
+            { className: "sb-srch" },
+            h("i", { className: "fa fa-magnifying-glass" }),
+            h("input", {
+              type: "text",
+              placeholder: "Search....",
+              value: search,
+              onChange: (e) => onSearch(e.target.value),
+            }),
+          ),
+          h(
+            "div",
+            { className: "sb-nav" },
+            Object.entries(grouped).map(([tag, eps]) => {
+              const filtered = eps.filter(
+                (ep) =>
+                  !search ||
+                  ep.path.toLowerCase().includes(search.toLowerCase()) ||
+                  (ep.op.summary || "")
+                    .toLowerCase()
+                    .includes(search.toLowerCase()),
+              );
+              if (!filtered.length) return null;
+              const isExpanded = expandedTag === tag;
+              return h(
+                "div",
+                { key: tag },
+                h(
+                  "div",
+                  {
+                    className: "sb-grp-hd",
+                    onClick: () => toggleTag(tag),
+                  },
+                  h(
+                    "span",
+                    {
+                      style: {
+                        flex: 1,
+                        textTransform: "capitalize",
+                        fontSize: 16,
+                      },
+                    },
+                    tag,
+                  ),
+                  h("i", {
+                    className: isExpanded
+                      ? "fa fa-chevron-down"
+                      : "fa fa-chevron-right",
+                    style: {
+                      fontSize: "10px",
+                      color: "var(--t3)",
+                    },
+                  }),
+                ),
+                isExpanded &&
+                  filtered.map((ep) =>
+                    h(
+                      "a",
+                      {
+                        key: ep.id,
+                        href: `#${ep.id}`,
+                        className: `ep-btn ${activeId === ep.id ? "on" : ""}`,
+                        onClick: (e) => {
+                          e.preventDefault();
+                          onSelect(ep);
+                        },
+                      },
+                      h(
+                        "span",
+                        {
+                          className: `ep-m m-${ep.method}`,
+                        },
+                        ep.method.toUpperCase(),
+                      ),
+                      h(
+                        "span",
+                        { className: "ep-p" },
+                        ep.op.summary || ep.path,
+                      ),
+                    ),
+                  ),
+              );
+            }),
+          ),
+          h(
+            "div",
+            { className: "sb-foot" },
+            h("span", null, `${endpoints.length} endpoints`),
+            h(
+              "span",
+              {
+                style: {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                },
+              },
+              h("i", {
+                className: "fa fa-circle-dot",
+                style: { color: "var(--green)", fontSize: 9 },
+              }),
+              "OpenAPI ",
+              spec.openapi,
+            ),
+          ),
+        );
+      }
+
+      function EmptyState({ onImportClick }) {
+        const loadSampleData = () => {
+          try {
+            // Use embedded sample data if available
+            if (typeof SAMPLE_DATA !== "undefined" && SAMPLE_DATA) {
+              const spec =
+                typeof SAMPLE_DATA === "string"
+                  ? JSON.parse(SAMPLE_DATA)
+                  : SAMPLE_DATA;
+              onImportClick(spec);
+            } else {
+              console.error("No sample data available");
+            }
+          } catch (error) {
+            console.error("Failed to load sample data:", error);
+          }
+        };
+
+        return h(
+          "div",
+          {
+            className: "empty",
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "100%",
+              gap: "16px",
+            },
+          },
+          h("i", {
+            className: "fa fa-book-open",
+            style: { fontSize: "48px", opacity: "0.2" },
+          }),
+          h(
+            "div",
+            { style: { textAlign: "center", maxWidth: "400px" } },
+            h(
+              "h2",
+              {
+                style: {
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  color: "var(--t1)",
+                  marginBottom: "8px",
+                },
+              },
+              "No API Specification Loaded",
+            ),
+            h(
+              "p",
+              {
+                style: {
+                  fontSize: "13px",
+                  color: "var(--t2)",
+                  lineHeight: "1.5",
+                },
+              },
+              "Click the button below to load a sample API and explore the documentation features.",
+            ),
+          ),
+          h(
+            "button",
+            {
+              className: "btn-p",
+              style: {
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 20px",
+                width: "auto",
+              },
+              onClick: loadSampleData,
+            },
+            h("i", { className: "fa fa-flask" }),
+            "Try Sample API",
+          ),
+        );
+      }
+
+      function App() {
+        // Initialize spec from injected value if available
+        let initialSpec = null;
+        if (typeof INJECTED_SPEC !== "undefined" && INJECTED_SPEC) {
+          try {
+            initialSpec =
+              typeof INJECTED_SPEC === "string"
+                ? JSON.parse(INJECTED_SPEC)
+                : INJECTED_SPEC;
+          } catch (e) {
+            console.error("Failed to parse injected spec:", e);
+          }
+        }
+
+        const [spec, setSpec] = useState(initialSpec);
+        const [search, setSearch] = useState("");
+        const endpoints = useMemo(() => (spec ? buildEps(spec) : []), [spec]);
+
+        const [activeEp, setActive] = useState(() => {
+          const eps = initialSpec ? buildEps(initialSpec) : [];
+          const hash = window.location.hash.slice(1);
+          if (hash) {
+            const ep = eps.find((e) => e.id === hash);
+            if (ep) return ep;
+          }
+          if (eps.length > 0) {
+            const grouped = groupByTag(eps, initialSpec?.tags);
+            const tagKeys = Object.keys(grouped);
+            if (tagKeys.length > 0) {
+              return grouped[tagKeys[0]][0];
+            }
+            return eps[0];
+          }
+          return null;
+        });
+
+        const [theme, setTheme] = useState(() => {
+          try {
+            return localStorage.getItem("openapi-ui-theme") || "system";
+          } catch {
+            return "system";
+          }
+        });
+        const [apiKey, setApiKey] = useState("");
+        const [showApiKey, setShowApiKey] = useState(false);
+        const [bearerToken, setBearerToken] = useState("");
+        const [showBearer, setShowBearer] = useState(false);
+        const [authType, setAuthType] = useState("api_key");
+        const [baseUrl, setBaseUrl] = useState("");
+
+        // Initialize baseUrl from spec.servers when spec changes
+        useEffect(() => {
+          const serverUrl = spec?.servers?.[0]?.url || "";
+          setBaseUrl(serverUrl);
+        }, [spec]);
+
+        // Sync active endpoint when endpoints change (e.g. after manual import)
+        useEffect(() => {
+          if (!endpoints.length) {
+            setActive(null);
+            return;
+          }
+
+          const hash = window.location.hash.slice(1);
+          if (hash) {
+            const ep = endpoints.find((e) => e.id === hash);
+            if (ep) {
+              setActive(ep);
+              return;
+            }
+          }
+
+          // Default to visually first if not already set to a valid endpoint in the current spec
+          if (!activeEp || !endpoints.find((e) => e.id === activeEp.id)) {
+            const grouped = groupByTag(endpoints, spec?.tags);
+            const tagKeys = Object.keys(grouped);
+            if (tagKeys.length > 0) {
+              setActive(grouped[tagKeys[0]][0]);
+            } else {
+              setActive(endpoints[0]);
+            }
+          }
+        }, [endpoints]);
+
+        // Handle hash navigation
+        useEffect(() => {
+          const handleHashChange = () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+              const ep = endpoints.find((e) => e.id === hash);
+              if (ep && ep.id !== activeEp?.id) {
+                setActive(ep);
+              }
+            } else if (endpoints.length > 0) {
+              const grouped = groupByTag(endpoints, spec.tags);
+              const firstTag = Object.keys(grouped)[0];
+              const firstEp =
+                firstTag && grouped[firstTag].length > 0
+                  ? grouped[firstTag][0]
+                  : endpoints[0];
+
+              if (activeEp?.id !== firstEp.id) {
+                setActive(firstEp);
+              }
+            }
+          };
+
+          window.addEventListener("hashchange", handleHashChange);
+          return () =>
+            window.removeEventListener("hashchange", handleHashChange);
+        }, [endpoints, activeEp, spec.tags]);
+
+        const applyTheme = useCallback((t) => {
+          const r =
+            t === "system"
+              ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+              : t;
+          document.documentElement.setAttribute("data-theme", r);
+          const d = document.getElementById("hljs-dark");
+          const l = document.getElementById("hljs-light");
+          if (d) d.disabled = r !== "dark";
+          if (l) l.disabled = r !== "light";
+        }, []);
+
+        const changeTheme = useCallback(
+          (t) => {
+            setTheme(t);
+            applyTheme(t);
+            try {
+              localStorage.setItem("openapi-ui-theme", t);
+            } catch {}
+          },
+          [applyTheme],
+        );
+
+        useEffect(() => {
+          // Apply current theme
+          applyTheme(theme);
+
+          // Setup listener for system changes
+          const mq = window.matchMedia("(prefers-color-scheme: dark)");
+          const handler = (e) => {
+            if (theme === "system") {
+              applyTheme("system");
+            }
+          };
+
+          // Initial check isn't needed here as applyTheme(theme) runs on every 'theme' change
+          // and theme is initialized correctly.
+
+          mq.addEventListener("change", handler);
+          return () => mq.removeEventListener("change", handler);
+        }, [applyTheme, theme]);
+
+        // Clear sensitive auth data on page unload (security measure)
+        useEffect(() => {
+          const handleBeforeUnload = () => {
+            // Credentials are in-memory only, cleared automatically
+            console.log("Page unloaded - credentials cleared");
+          };
+          window.addEventListener("beforeunload", handleBeforeUnload);
+          return () =>
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        }, []);
+
+        // Update hash when active endpoint changes
+        useEffect(() => {
+          if (activeEp) {
+            window.location.hash = activeEp.id;
+          }
+        }, [activeEp]);
+
+        // Update page title based on spec and active endpoint
+        useEffect(() => {
+          const specTitle = spec?.info?.title || "API Documentation";
+          if (activeEp) {
+            const endpointTitle = activeEp.op.summary || activeEp.path;
+            document.title = `${endpointTitle} - ${specTitle}`;
+          } else {
+            document.title = specTitle;
+          }
+        }, [activeEp, spec]);
+
+        // Show empty state if no spec is loaded
+        if (!spec) {
+          return h(EmptyState, {
+            onImportClick: (sampleSpec) => {
+              setSpec(sampleSpec);
+            },
+          });
+        }
+
+        return h(
+          "div",
+          { className: "app" },
+          h(
+            "div",
+            { className: "sidebar" },
+            h(Sidebar, {
+              spec,
+              endpoints,
+              activeId: activeEp?.id,
+              onSelect: setActive,
+              search,
+              onSearch: setSearch,
+              theme,
+              onTheme: changeTheme,
+            }),
+          ),
+          h(
+            "div",
+            { className: "main" },
+            h(
+              "div",
+              { className: "topbar" },
+              h(
+                "div",
+                {
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    minWidth: 0,
+                    overflow: "hidden",
+                  },
+                },
+                (spec.servers || []).map((s, i) =>
+                  h(
+                    "div",
+                    { key: i, className: "server-pill" },
+                    h("i", {
+                      className: "fa fa-circle",
+                      style: {
+                        fontSize: 6,
+                        color: i === 0 ? "var(--green)" : "var(--t4)",
+                      },
+                    }),
+                    h("span", { className: "server-url" }, s.url),
+                    s.description &&
+                      h(
+                        "span",
+                        {
+                          style: {
+                            color: "var(--t3)",
+                            fontSize: 11,
+                          },
+                        },
+                        s.description,
+                      ),
+                  ),
+                ),
+              ),
+              h(
+                "div",
+                {
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    flexShrink: 0,
+                  },
+                },
+                h(
+                  "div",
+                  {
+                    className: `auth-status ${apiKey ? "set" : ""}`,
+                    style: { marginRight: 8 },
+                  },
+                  h(
+                    "span",
+                    { style: { marginLeft: 4 } },
+                    "v" + spec.info?.version,
+                  ),
+                ),
+              ),
+            ),
+            h(
+              "div",
+              { className: "detail" },
+              h(EndpointDetail, {
+                ep: activeEp,
+                spec,
+                apiKey,
+                bearerToken,
+                authType,
+                baseUrl,
+                setApiKey,
+                setBearerToken,
+                setAuthType,
+                showApiKey,
+                setShowApiKey,
+                showBearer,
+                setShowBearer,
+              }),
+            ),
+          ),
+        );
+      }
+
+      createRoot(document.getElementById("root")).render(h(App));
+    </script>
+  </body>
+</html>
