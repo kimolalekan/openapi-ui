@@ -1,3 +1,5 @@
+//! Built-in light and dark themes.
+
 const LIGHT: &str = r#"
 :root {
     --bg: #faf9f5;
@@ -92,6 +94,7 @@ impl ThemeMode {
         }
     }
 
+    /// Returns the CSS variables for this theme mode.
     pub fn get_css(&self) -> String {
         match self {
             ThemeMode::Light => LIGHT.to_string(),
@@ -101,10 +104,12 @@ impl ThemeMode {
     }
 }
 
+/// Returns the CSS for a theme by name (`"light"`, `"dark"`, or `"system"`).
 pub fn get_theme_css(theme: &str) -> String {
     ThemeMode::from_str(theme).get_css()
 }
 
+/// Returns both light and dark theme CSS combined.
 pub fn get_complete_theme_css() -> String {
     ThemeMode::System.get_css()
 }

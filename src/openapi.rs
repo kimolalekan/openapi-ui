@@ -1,6 +1,9 @@
+//! Types matching the OpenAPI 3.x specification.
+
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// Root document object of the OpenAPI specification.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OpenAPISpec {
     pub openapi: String,
@@ -19,6 +22,7 @@ pub struct OpenAPISpec {
     pub external_docs: Option<ExternalDocumentation>,
 }
 
+/// Metadata about the API.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Info {
     pub title: String,
@@ -35,6 +39,7 @@ pub struct Info {
     pub x_logo: Option<String>,
 }
 
+/// Contact information for the API.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Contact {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -45,6 +50,7 @@ pub struct Contact {
     pub email: Option<String>,
 }
 
+/// License information for the API.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct License {
     pub name: String,
@@ -52,6 +58,7 @@ pub struct License {
     pub url: Option<String>,
 }
 
+/// An object representing a server.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Server {
     pub url: String,
@@ -59,6 +66,7 @@ pub struct Server {
     pub description: Option<String>,
 }
 
+/// Describes the operations available on a single path.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub struct PathItem {
@@ -88,6 +96,7 @@ pub struct PathItem {
     pub description: Option<String>,
 }
 
+/// Describes a single API operation on a path.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Operation {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -116,6 +125,7 @@ pub struct Operation {
     pub servers: Option<Vec<Server>>,
 }
 
+/// Describes a single operation parameter.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Parameter {
     pub name: String,
@@ -135,6 +145,7 @@ pub struct Parameter {
     pub examples: Option<HashMap<String, Example>>,
 }
 
+/// The location of a parameter (query, header, path, or cookie).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ParameterLocation {
@@ -144,6 +155,7 @@ pub enum ParameterLocation {
     Cookie,
 }
 
+/// Describes a request body.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RequestBody {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -153,6 +165,7 @@ pub struct RequestBody {
     pub required: bool,
 }
 
+/// Describes a media type with optional schema and examples.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MediaType {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -165,6 +178,7 @@ pub struct MediaType {
     pub encoding: Option<HashMap<String, Encoding>>,
 }
 
+/// A single encoding definition applied to a single schema property.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Encoding {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -179,6 +193,7 @@ pub struct Encoding {
     pub allow_reserved: bool,
 }
 
+/// Describes a single header parameter.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Header {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -193,6 +208,7 @@ pub struct Header {
     pub example: Option<serde_json::Value>,
 }
 
+/// Describes a single response from an API operation.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Response {
     pub description: String,
@@ -204,6 +220,7 @@ pub struct Response {
     pub links: Option<HashMap<String, serde_json::Value>>,
 }
 
+/// An example value for a parameter, media type, or schema.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Example {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -216,6 +233,7 @@ pub struct Example {
     pub external_value: Option<String>,
 }
 
+/// The Schema Object allows the definition of input and output data types.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Schema {
     #[serde(rename = "$ref", skip_serializing_if = "Option::is_none")]
@@ -292,6 +310,7 @@ pub struct Schema {
     pub not: Option<Box<Schema>>,
 }
 
+/// Discriminator object for polymorphism support.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Discriminator {
     pub property_name: String,
@@ -299,6 +318,7 @@ pub struct Discriminator {
     pub mapping: Option<HashMap<String, String>>,
 }
 
+/// XML metadata for a schema property.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Xml {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -313,6 +333,7 @@ pub struct Xml {
     pub wrapped: bool,
 }
 
+/// Holds reusable schema, response, parameter, and other objects.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Components {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -335,6 +356,7 @@ pub struct Components {
     pub callbacks: Option<HashMap<String, serde_json::Value>>,
 }
 
+/// Defines a security scheme that can be used by the operations.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
 pub enum SecurityScheme {
@@ -364,6 +386,7 @@ pub enum SecurityScheme {
     },
 }
 
+/// HTTP authentication scheme (e.g., `bearer`, `basic`).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum HttpScheme {
@@ -372,6 +395,7 @@ pub enum HttpScheme {
     Flexible(serde_json::Value),
 }
 
+/// Schema type, which can be a single string or an array of strings.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum SchemaType {
@@ -379,6 +403,7 @@ pub enum SchemaType {
     Array(Vec<String>),
 }
 
+/// The location of an API key parameter.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ApiKeyLocation {
@@ -387,9 +412,11 @@ pub enum ApiKeyLocation {
     Cookie,
 }
 
+/// A security requirement object listing the required security schemes.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SecurityRequirement(pub HashMap<String, Vec<String>>);
 
+/// Adds metadata to a single tag used by operations.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Tag {
     pub name: String,
@@ -399,6 +426,7 @@ pub struct Tag {
     pub external_docs: Option<ExternalDocumentation>,
 }
 
+/// Allows referencing an external resource for extended documentation.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExternalDocumentation {
     #[serde(skip_serializing_if = "Option::is_none")]

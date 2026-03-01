@@ -1,6 +1,6 @@
 [package]
 name = "openapi-ui"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "OpenAPI/Swagger documentation UI generator for Rust."
 license = "MIT"

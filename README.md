@@ -6,6 +6,53 @@
 
 A Rust library for generating Custom UI for OpenAPI/Swagger documentation.
 
+## Features
+
+- ✅ OpenAPI 3.0.x and 3.1.x support
+- ✅ Light and dark themes with toggle
+- ✅ Responsive sidebar navigation
+- ✅ Endpoint search/filter
+- ✅ Syntax highlighting (Highlight.js)
+- ✅ Code copy buttons
+- ✅ Method color coding
+- ✅ Parameter tables
+- ✅ Request/response examples
+- ✅ Security scheme display
+- ✅ Tag-based grouping
+
+## Web Framework Integration
+
+`openapi-ui` is framework-agnostic and returns a simple `String` of HTML. This makes it easy to integrate with any Rust web framework.
+
+Check the `examples/` directory for complete implementations:
+
+- [Axum Example](examples/axum.rs)
+- [Actix-web Example](examples/actix.rs)
+- [Rocket Example](examples/rocket.rs)
+- [Warp Example](examples/warp.rs)
+- [Poem Example](examples/poem.rs)
+- [Salvo Example](examples/salvo.rs)
+
+### Basic Axum Integration
+
+```rust
+use axum::{response::Html, routing::get, Router};
+use openapi_ui::{generate_docs, ThemeMode};
+
+async fn show_docs() -> Html<String> {
+    let openapi_json = "..."; // Your OpenAPI JSON
+    let html = generate_docs(openapi_json, ThemeMode::System, None, None).unwrap();
+    Html(html)
+}
+
+#[tokio::main]
+async fn main() {
+    let app = Router::new().route("/docs", get(show_docs));
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+```
+
 ## Installation
 
 Add this to your `Cargo.toml`:
@@ -433,53 +480,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Generated api-docs.html");
 
     Ok(())
-}
-```
-
-## Features
-
-- ✅ OpenAPI 3.0.x and 3.1.x support
-- ✅ Light and dark themes with toggle
-- ✅ Responsive sidebar navigation
-- ✅ Endpoint search/filter
-- ✅ Syntax highlighting (Highlight.js)
-- ✅ Code copy buttons
-- ✅ Method color coding
-- ✅ Parameter tables
-- ✅ Request/response examples
-- ✅ Security scheme display
-- ✅ Tag-based grouping
-
-## Web Framework Integration
-
-`openapi-ui` is framework-agnostic and returns a simple `String` of HTML. This makes it easy to integrate with any Rust web framework.
-
-Check the `examples/` directory for complete implementations:
-
-- [Axum Example](examples/axum.rs)
-- [Actix-web Example](examples/actix.rs)
-- [Rocket Example](examples/rocket.rs)
-- [Warp Example](examples/warp.rs)
-- [Poem Example](examples/poem.rs)
-- [Salvo Example](examples/salvo.rs)
-
-### Basic Axum Integration
-
-```rust
-use axum::{response::Html, routing::get, Router};
-use openapi_ui::{generate_docs, ThemeMode};
-
-async fn show_docs() -> Html<String> {
-    let openapi_json = "..."; // Your OpenAPI JSON
-    let html = generate_docs(openapi_json, ThemeMode::System, None, None).unwrap();
-    Html(html)
-}
-
-#[tokio::main]
-async fn main() {
-    let app = Router::new().route("/docs", get(show_docs));
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
 }
 ```
 

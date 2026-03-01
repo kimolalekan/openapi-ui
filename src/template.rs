@@ -1,10 +1,14 @@
+//! HTML template rendering for the documentation UI.
+
 use crate::openapi::OpenAPISpec;
 use crate::theme;
 
+/// The raw HTML template used for rendering.
 pub const TEMPLATE_HTML: &str = include_str!("index.html");
 
 const SAMPLE_DATA: &str = include_str!("sample_data.json");
 
+/// Renders the HTML template with the given spec, theme, and favicon.
 pub fn template(spec: &OpenAPISpec, theme_name: &str, favicon: &str) -> String {
     let spec_json = serde_json::to_string(spec).unwrap_or_default();
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
@@ -19,6 +23,7 @@ pub fn template(spec: &OpenAPISpec, theme_name: &str, favicon: &str) -> String {
         .replace("/* SPEC_JSON_PLACEHOLDER */ null", &js_string)
 }
 
+/// Renders the HTML template with optional custom CSS injected after the built-in themes.
 pub fn template_with_custom_theme(
     spec: &OpenAPISpec,
     theme_name: &str,
@@ -59,6 +64,7 @@ pub fn template_with_custom_theme(
     }
 }
 
+/// Renders a demo template using the built-in Petstore sample data.
 pub fn base_template() -> String {
     let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
@@ -74,6 +80,7 @@ pub fn base_template() -> String {
         .replace("/* SAMPLE_DATA_PLACEHOLDER */ null", &sample_data_js)
 }
 
+/// Renders the HTML template with embedded theme CSS.
 pub fn template_with_embedded_theme(
     spec: &OpenAPISpec,
     theme_name: &str,

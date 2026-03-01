@@ -1,9 +1,12 @@
+//! High-level API for generating documentation HTML.
+
 use crate::error::{Result, UIError};
 use crate::openapi::OpenAPISpec;
 use crate::template::{base_template, template, template_with_custom_theme};
 
 pub use crate::theme::ThemeMode;
 
+/// Configuration for the documentation UI generator.
 #[derive(Debug, Clone)]
 pub struct UIConfig {
     pub spec: OpenAPISpec,
@@ -40,10 +43,12 @@ impl Default for UIConfig {
     }
 }
 
+/// Generates HTML from a [`UIConfig`].
 pub fn generate_ui_with_config(config: UIConfig) -> String {
     template(&config.spec, &config.theme, &config.favicon)
 }
 
+/// Generates HTML from a parsed [`OpenAPISpec`].
 pub fn generate_ui(spec: &OpenAPISpec) -> String {
     let config = UIConfig {
         spec: spec.clone(),
@@ -52,15 +57,18 @@ pub fn generate_ui(spec: &OpenAPISpec) -> String {
     template(spec, &config.theme, &config.favicon)
 }
 
+/// Generates a demo page using built-in sample data.
 pub fn generate_base_ui() -> String {
     base_template()
 }
 
+/// Builder for constructing documentation HTML with a fluent API.
 pub struct UIBuilder {
     config: UIConfig,
 }
 
 impl UIBuilder {
+    /// Creates a new builder from an [`OpenAPISpec`].
     pub fn new(spec: OpenAPISpec) -> Self {
         Self {
             config: UIConfig {
@@ -70,26 +78,36 @@ impl UIBuilder {
         }
     }
 
+    /// Sets the theme mode (`"light"`, `"dark"`, or `"system"`).
     pub fn theme(mut self, theme: &str) -> Self {
         self.config.theme = theme.to_string();
         self
     }
 
+    /// Sets the base URL for API requests.
     pub fn base_url(mut self, url: &str) -> Self {
         self.config.base_url = Some(url.to_string());
         self
     }
 
+    /// Sets a custom favicon URL.
     pub fn favicon(mut self, url: &str) -> Self {
         self.config.favicon = url.to_string();
         self
     }
 
+    /// Builds and returns the final HTML string.
     pub fn build(self) -> String {
         generate_ui_with_config(self.config)
     }
 }
 
+/// Generates documentation HTML from an OpenAPI JSON string.
+///
+/// This is the primary entry point for the library. Pass an OpenAPI JSON string,
+/// a [`ThemeMode`], optional custom CSS, and an optional favicon URL.
+///
+/// Returns the generated HTML as a `String`, or a [`UIError`] on failure.
 pub fn generate_docs(
     json: &str,
     mode: ThemeMode,
