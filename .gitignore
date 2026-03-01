@@ -1,1 +1,19 @@
+# Rust
 /target
+Cargo.lock
+**/*.rs.bk
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Output
+docs.html
+api-docs.html
+examples/*.html
