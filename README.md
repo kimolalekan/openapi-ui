@@ -4,7 +4,22 @@
 [![Documentation](https://docs.rs/openapi-ui/badge.svg)](https://docs.rs/openapi-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A Rust library for generating Custom UI for OpenAPI/Swagger documentation.
+A Rust library for generating custom UI for OpenAPI/Swagger documentation.
+
+**[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)**
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Web Framework Integration](#web-framework-integration)
+- [Theming](#theming)
+- [API Reference](#api-reference)
+- [OpenAPI Structures](#openapi-structures)
+- [Error Handling](#error-handling)
+- [Complete Example](#complete-example)
+- [License](#license)
 
 ## Features
 
@@ -19,64 +34,6 @@ A Rust library for generating Custom UI for OpenAPI/Swagger documentation.
 - ✅ Request/response examples
 - ✅ Security scheme display
 - ✅ Tag-based grouping
-
-## Web Framework Integration
-
-`openapi-ui` is framework-agnostic and returns a simple `String` of HTML. This makes it easy to integrate with any Rust web framework.
-
-Check the `examples/` directory for complete implementations:
-
-- [Axum Example](examples/axum.rs)
-- [Actix-web Example](examples/actix.rs)
-- [Rocket Example](examples/rocket.rs)
-- [Warp Example](examples/warp.rs)
-- [Poem Example](examples/poem.rs)
-- [Salvo Example](examples/salvo.rs)
-
-### Basic Axum Integration
-
-```rust
-use axum::{response::Html, routing::get, Router};
-use openapi_ui::{generate_docs, ThemeMode};
-
-async fn show_docs() -> Html<String> {
-    let openapi_json = "..."; // Your OpenAPI JSON
-    let html = generate_docs(openapi_json, ThemeMode::System, None, None).unwrap();
-    Html(html)
-}
-
-#[tokio::main]
-async fn main() {
-    let app = Router::new().route("/docs", get(show_docs));
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
-}
-```
-
-## Using with utoipa
-
-The OpenAPI JSON string can be generated at compile time using [utoipa](https://crates.io/crates/utoipa). Annotate your routes and models, then pass the generated JSON to `openapi-ui`:
-
-```rust
-use utoipa::OpenApi;
-use openapi_ui::{generate_docs, ThemeMode};
-
-#[derive(OpenApi)]
-#[openapi(
-    paths(get_users, create_user),
-    components(schemas(User))
-)]
-struct ApiDoc;
-
-// Generate the OpenAPI JSON from utoipa
-let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
-
-// Pass it to openapi-ui
-let html = generate_docs(&openapi_json, ThemeMode::System, None, None).unwrap();
-std::fs::write("docs.html", html).unwrap();
-```
-
-All framework examples in the `examples/` directory include comments showing how to integrate with utoipa.
 
 ## Installation
 
@@ -121,23 +78,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-### Generate with Custom Theme
-
-```rust
-use openapi_ui::{generate_docs, ThemeMode};
-
-let custom_css = r#"
-:root {
-    --accent: #3b82f6;
-    --accent-h: #2563eb;
-    --accent-bg: #eff6ff;
-}
-"#;
-
-let html = generate_docs(openapi_json, ThemeMode::System, Some(custom_css), None)?;
-std::fs::write("docs.html", html)?;
-```
-
 ### Theme Modes
 
 ```rust
@@ -166,6 +106,64 @@ let html = UIBuilder::new(spec)
 
 std::fs::write("docs.html", html)?;
 ```
+
+## Web Framework Integration
+
+`openapi-ui` is framework-agnostic and returns a simple `String` of HTML. This makes it easy to integrate with any Rust web framework.
+
+Check the `examples/` directory for complete implementations:
+
+- [Axum Example](examples/axum.rs)
+- [Actix-web Example](examples/actix.rs)
+- [Rocket Example](examples/rocket.rs)
+- [Warp Example](examples/warp.rs)
+- [Poem Example](examples/poem.rs)
+- [Salvo Example](examples/salvo.rs)
+
+### Basic Axum Integration
+
+```rust
+use axum::{response::Html, routing::get, Router};
+use openapi_ui::{generate_docs, ThemeMode};
+
+async fn show_docs() -> Html<String> {
+    let openapi_json = "..."; // Your OpenAPI JSON
+    let html = generate_docs(openapi_json, ThemeMode::System, None, None).unwrap();
+    Html(html)
+}
+
+#[tokio::main]
+async fn main() {
+    let app = Router::new().route("/docs", get(show_docs));
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+```
+
+### Using with utoipa
+
+The OpenAPI JSON string can be generated at compile time using [utoipa](https://crates.io/crates/utoipa). Annotate your routes and models, then pass the generated JSON to `openapi-ui`:
+
+```rust
+use utoipa::OpenApi;
+use openapi_ui::{generate_docs, ThemeMode};
+
+#[derive(OpenApi)]
+#[openapi(
+    paths(get_users, create_user),
+    components(schemas(User))
+)]
+struct ApiDoc;
+
+// Generate the OpenAPI JSON from utoipa
+let openapi_json = ApiDoc::openapi().to_pretty_json().unwrap();
+
+// Pass it to openapi-ui
+let html = generate_docs(&openapi_json, ThemeMode::System, None, None).unwrap();
+std::fs::write("docs.html", html).unwrap();
+```
+
+All framework examples in the `examples/` directory include comments showing how to integrate with utoipa.
 
 ## Theming
 
@@ -224,26 +222,6 @@ let html = generate_docs(openapi_json, ThemeMode::System, Some(custom_css), None
 std::fs::write("docs.html", html)?;
 ```
 
-### Using Theme CSS Directly
-
-You can also access the built-in theme CSS for reference or extension:
-
-```rust
-use openapi_ui::{Theme, get_theme_css, get_complete_theme_css};
-
-// Get light theme CSS
-let light_css = Theme::Light.as_css();
-
-// Get dark theme CSS
-let dark_css = Theme::Dark.as_css();
-
-// Get both themes (for system theme switching)
-let all_css = get_complete_theme_css();
-
-// Get specific theme by name
-let css = get_theme_css("dark");
-```
-
 ### Example: Brand Colors
 
 ```rust
@@ -266,6 +244,26 @@ let brand_css = r#"
     --accent-bg: #1b3a25;
 }
 "#;
+```
+
+### Using Theme CSS Directly
+
+You can also access the built-in theme CSS for reference or extension:
+
+```rust
+use openapi_ui::{Theme, get_theme_css, get_complete_theme_css};
+
+// Get light theme CSS
+let light_css = Theme::Light.as_css();
+
+// Get dark theme CSS
+let dark_css = Theme::Dark.as_css();
+
+// Get both themes (for system theme switching)
+let all_css = get_complete_theme_css();
+
+// Get specific theme by name
+let css = get_theme_css("dark");
 ```
 
 ## API Reference
@@ -302,6 +300,14 @@ let spec: OpenAPISpec = serde_json::from_str(&openapi_json)?;
 let html = openapi_ui::generate_ui(&spec);
 ```
 
+#### `generate_base_ui() -> String`
+
+Generate a template with sample Petstore data (useful for demos).
+
+```rust
+let html = openapi_ui::generate_base_ui();
+```
+
 ### ThemeMode Enum
 
 ```rust
@@ -317,14 +323,6 @@ let mode = ThemeMode::from_str("light");
 
 // Convert to string
 let mode_str = ThemeMode::System.as_str();  // "system"
-```
-
-#### `generate_base_ui() -> String`
-
-Generate a template with sample Petstore data (useful for demos).
-
-```rust
-let html = openapi_ui::generate_base_ui();
 ```
 
 ### UIBuilder
