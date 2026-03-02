@@ -4,9 +4,11 @@
 //! [![Documentation](https://docs.rs/openapi-ui/badge.svg)](https://docs.rs/openapi-ui)
 //! [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 //!
-//! `openapi-ui` is a library for generating documentation UIs from OpenAPI specifications.
+//! `openapi-ui` is a library for generating custom documentation UIs from OpenAPI specifications.
 //!
 //! It takes an OpenAPI JSON string and produces a self-contained HTML file with a responsive UI.
+//! 
+//! **[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)**
 //!
 //! ## Web Framework Examples
 //!
