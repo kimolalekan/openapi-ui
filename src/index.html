@@ -1943,47 +1943,61 @@
                 const hasBody = !!bodyStr && !isMP;
                 const M = method.toUpperCase();
 
-                // Check security requirements
+                // Check security requirements and extract scheme details
                 const security = op.security || spec.security || [];
-                const hasApiKey = security.some((s) =>
-                    Object.keys(s).some((key) => {
-                        const scheme = spec.components?.securitySchemes?.[key];
-                        return scheme?.type === "apiKey";
-                    }),
-                );
-                const hasBearer = security.some((s) =>
-                    Object.keys(s).some((key) => {
-                        const scheme = spec.components?.securitySchemes?.[key];
-                        return (
-                            scheme?.type === "http" &&
-                            scheme?.scheme === "bearer"
-                        );
-                    }),
-                );
-                const hasOAuth2 = security.some((s) =>
-                    Object.keys(s).some((key) => {
-                        const scheme = spec.components?.securitySchemes?.[key];
-                        return scheme?.type === "oauth2";
-                    }),
-                );
-                const hasOpenIdConnect = security.some((s) =>
-                    Object.keys(s).some((key) => {
-                        const scheme = spec.components?.securitySchemes?.[key];
-                        return scheme?.type === "openIdConnect";
-                    }),
-                );
-                const apiKeyName = (() => {
-                    for (const sec of security) {
-                        for (const key of Object.keys(sec)) {
-                            const scheme =
-                                spec.components?.securitySchemes?.[key];
-                            if (scheme?.type === "apiKey") {
-                                return scheme.name || "X-API-Key";
-                            }
+                const securitySchemes = spec.components?.securitySchemes || {};
+
+                // Find the actual security schemes used by this endpoint
+                const activeSchemes = [];
+                for (const sec of security) {
+                    for (const key of Object.keys(sec)) {
+                        const scheme = securitySchemes[key];
+                        if (scheme) {
+                            activeSchemes.push({ name: key, ...scheme });
                         }
                     }
-                    return "X-API-Key";
-                })();
+                }
+
+                const hasApiKey = activeSchemes.some(
+                    (s) => s.type === "apiKey",
+                );
+                const hasBearer = activeSchemes.some(
+                    (s) => s.type === "http" && s.scheme === "bearer",
+                );
+                const hasBasic = activeSchemes.some(
+                    (s) => s.type === "http" && s.scheme === "basic",
+                );
+                const hasOAuth2 = activeSchemes.some(
+                    (s) => s.type === "oauth2",
+                );
+                const hasOpenIdConnect = activeSchemes.some(
+                    (s) => s.type === "openIdConnect",
+                );
+
+                // Get API key details from scheme
+                const apiKeyScheme = activeSchemes.find(
+                    (s) => s.type === "apiKey",
+                );
+                const apiKeyName = apiKeyScheme?.name || "X-API-Key";
+                const apiKeyIn = apiKeyScheme?.in || "header";
+
+                // Get bearer format from scheme
+                const bearerScheme = activeSchemes.find(
+                    (s) => s.type === "http" && s.scheme === "bearer",
+                );
+                const bearerFormat = bearerScheme?.bearerFormat || "JWT";
+
+                // Get OAuth2 flows from scheme
+                const oauth2Scheme = activeSchemes.find(
+                    (s) => s.type === "oauth2",
+                );
+                const oauth2Flows = oauth2Scheme?.flows || {};
+
+                // Get OpenID Connect URL from scheme
+                const oidcScheme = activeSchemes.find(
+                    (s) => s.type === "openIdConnect",
+                );
+                const oidcUrl = oidcScheme?.openIdConnectUrl || "";
 
                 if (lang === "curl") {
                     const lines = [`curl -X ${M} '${url}${qStr}'`];
@@ -1992,6 +2006,11 @@
                     }
                     if (hasBearer) {
                         lines.push(`  -H 'Authorization: Bearer YOUR_TOKEN'`);
+                    }
+                    if (hasBasic) {
+                        lines.push(
+                            `  -H 'Authorization: Basic BASE64_ENCODED_CREDENTIALS'`,
+                        );
                     }
                     if (hasOAuth2 || hasOpenIdConnect) {
                         lines.push(
@@ -2008,11 +2027,18 @@
                 if (lang === "javascript") {
                     const authHeaders = [];
                     if (hasApiKey) {
-                        authHeaders.push(`    '${apiKeyName}': 'YOUR_API_KEY'`);
+                        authHeaders.push(
+                            `    '${apiKeyName}': 'YOUR_API_KEY' // ${apiKeyIn === "header" ? "Header" : apiKeyIn === "query" ? "Query param" : "Cookie"}`,
+                        );
                     }
                     if (hasBearer) {
                         authHeaders.push(
-                            `    'Authorization': 'Bearer YOUR_TOKEN'`,
+                            `    'Authorization': 'Bearer YOUR_TOKEN'${bearerFormat ? ` // ${bearerFormat} token` : ""}`,
+                        );
+                    }
+                    if (hasBasic) {
+                        authHeaders.push(
+                            `    'Authorization': 'Basic BASE64_ENCODED_CREDENTIALS'`,
                         );
                     }
                     if (hasOAuth2 || hasOpenIdConnect) {
@@ -2045,11 +2071,18 @@
                         : null;
                     const authLines = [];
                     if (hasApiKey) {
-                        authLines.push(`    "${apiKeyName}": "YOUR_API_KEY",`);
+                        authLines.push(
+                            `    "${apiKeyName}": "YOUR_API_KEY",  # ${apiKeyIn === "header" ? "Header" : apiKeyIn === "query" ? "Query param" : "Cookie"}`,
+                        );
                     }
                     if (hasBearer) {
                         authLines.push(
-                            `    "Authorization": "Bearer YOUR_TOKEN",`,
+                            `    "Authorization": "Bearer YOUR_TOKEN",  # ${bearerFormat} token`,
+                        );
+                    }
+                    if (hasBasic) {
+                        authLines.push(
+                            `    "Authorization": "Basic BASE64_ENCODED_CREDENTIALS",`,
                         );
                     }
                     if (hasOAuth2 || hasOpenIdConnect) {
@@ -2075,10 +2108,19 @@
                 if (lang === "php") {
                     const authLines = [];
                     if (hasApiKey) {
-                        authLines.push(`    "${apiKeyName}: " . $apiKey`);
+                        authLines.push(
+                            `    "${apiKeyName}: " . $apiKey  // ${apiKeyIn === "header" ? "Header" : apiKeyIn === "query" ? "Query param" : "Cookie"}`,
+                        );
                     }
                     if (hasBearer) {
-                        authLines.push(`    "Authorization: Bearer " . $token`);
+                        authLines.push(
+                            `    "Authorization: Bearer " . $token  // ${bearerFormat} token`,
+                        );
+                    }
+                    if (hasBasic) {
+                        authLines.push(
+                            `    "Authorization: Basic " . base64_encode($username . ':' . $password)`,
+                        );
                     }
                     if (hasOAuth2 || hasOpenIdConnect) {
                         authLines.push(
@@ -2094,7 +2136,12 @@
                         ``,
                         `$url    = "${url}${qStr}";`,
                         hasApiKey ? `$apiKey = "YOUR_API_KEY";` : ``,
-                        hasBearer ? `$token = "YOUR_TOKEN";` : ``,
+                        hasBearer
+                            ? `$token = "YOUR_TOKEN";  // ${bearerFormat}`
+                            : ``,
+                        hasBasic
+                            ? `$username = "YOUR_USERNAME";\n$password = "YOUR_PASSWORD";`
+                            : ``,
                         hasOAuth2 || hasOpenIdConnect
                             ? `$oauthToken = "YOUR_OAUTH_TOKEN";`
                             : ``,
@@ -2139,12 +2186,17 @@
                     const authLines = [];
                     if (hasApiKey) {
                         authLines.push(
-                            `\treq.Header.Set("${apiKeyName}", "YOUR_API_KEY")`,
+                            `\treq.Header.Set("${apiKeyName}", "YOUR_API_KEY")  // ${apiKeyIn === "header" ? "Header" : apiKeyIn === "query" ? "Query param" : "Cookie"}`,
                         );
                     }
                     if (hasBearer) {
                         authLines.push(
-                            `\treq.Header.Set("Authorization", "Bearer YOUR_TOKEN")`,
+                            `\treq.Header.Set("Authorization", "Bearer YOUR_TOKEN")  // ${bearerFormat} token`,
+                        );
+                    }
+                    if (hasBasic) {
+                        authLines.push(
+                            `\treq.SetBasicAuth("YOUR_USERNAME", "YOUR_PASSWORD")`,
                         );
                     }
                     if (hasOAuth2 || hasOpenIdConnect) {
@@ -2182,17 +2234,22 @@
                     const authLines = [];
                     if (hasApiKey) {
                         authLines.push(
-                            `        .header("${apiKeyName}", "YOUR_API_KEY")`,
+                            `        .header("${apiKeyName}", "YOUR_API_KEY")  // ${apiKeyIn === "header" ? "Header" : apiKeyIn === "query" ? "Query param" : "Cookie"}`,
                         );
                     }
                     if (hasBearer) {
                         authLines.push(
-                            `        .header("Authorization", "Bearer YOUR_TOKEN")`,
+                            `        .header("Authorization", format!("Bearer {}", "YOUR_TOKEN"))  // ${bearerFormat} token`,
+                        );
+                    }
+                    if (hasBasic) {
+                        authLines.push(
+                            `        .header("Authorization", format!("Basic {}", base64::encode("YOUR_USERNAME:YOUR_PASSWORD")))`,
                         );
                     }
                     if (hasOAuth2 || hasOpenIdConnect) {
                         authLines.push(
-                            `        .header("Authorization", "Bearer YOUR_OAUTH_TOKEN")`,
+                            `        .header("Authorization", format!("Bearer {}", "YOUR_OAUTH_TOKEN"))`,
                         );
                     }
                     const bLines = hasBody
