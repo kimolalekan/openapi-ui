@@ -14,7 +14,7 @@ pub fn template(spec: &OpenAPISpec, theme_name: &str, favicon: &str) -> String {
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
     let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
-    let mode = theme::ThemeMode::from_str(theme_name);
+    let mode = theme_name.parse().unwrap_or(theme::ThemeMode::System);
 
     TEMPLATE_HTML
         .replace("{{light}}", &theme::ThemeMode::Light.get_css())
@@ -36,7 +36,7 @@ pub fn template_with_custom_theme(
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
     let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
-    let mode = theme::ThemeMode::from_str(theme_name);
+    let mode = theme_name.parse().unwrap_or(theme::ThemeMode::System);
     let inject_theme_script = mode == theme::ThemeMode::System;
 
     // Inline script to set theme before page renders (prevents flash of wrong theme)
@@ -90,7 +90,7 @@ pub fn template_with_embedded_theme(spec: &OpenAPISpec, theme_name: &str, favico
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
     let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
-    let mode = theme::ThemeMode::from_str(theme_name);
+    let mode = theme_name.parse().unwrap_or(theme::ThemeMode::System);
 
     TEMPLATE_HTML
         .replace("{{light}}", &theme::ThemeMode::Light.get_css())

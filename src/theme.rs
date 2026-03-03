@@ -75,16 +75,20 @@ pub enum ThemeMode {
     System,
 }
 
-impl ThemeMode {
+impl std::str::FromStr for ThemeMode {
+    type Err = ();
+
     /// Create a ThemeMode from a string slice.
-    pub fn from_str(s: &str) -> Self {
-        match s.to_lowercase().as_str() {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s.to_lowercase().as_str() {
             "light" => ThemeMode::Light,
             "dark" => ThemeMode::Dark,
             _ => ThemeMode::System,
-        }
+        })
     }
+}
 
+impl ThemeMode {
     /// Convert ThemeMode to a string slice.
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -106,7 +110,7 @@ impl ThemeMode {
 
 /// Returns the CSS for a theme by name (`"light"`, `"dark"`, or `"system"`).
 pub fn get_theme_css(theme: &str) -> String {
-    ThemeMode::from_str(theme).get_css()
+    theme.parse().unwrap_or(ThemeMode::System).get_css()
 }
 
 /// Returns both light and dark theme CSS combined.
@@ -120,11 +124,11 @@ mod tests {
 
     #[test]
     fn test_theme_mode_from_str() {
-        assert_eq!(ThemeMode::from_str("dark"), ThemeMode::Dark);
-        assert_eq!(ThemeMode::from_str("DARK"), ThemeMode::Dark);
-        assert_eq!(ThemeMode::from_str("light"), ThemeMode::Light);
-        assert_eq!(ThemeMode::from_str("system"), ThemeMode::System);
-        assert_eq!(ThemeMode::from_str(""), ThemeMode::System);
+        assert_eq!("dark".parse::<ThemeMode>().unwrap(), ThemeMode::Dark);
+        assert_eq!("DARK".parse::<ThemeMode>().unwrap(), ThemeMode::Dark);
+        assert_eq!("light".parse::<ThemeMode>().unwrap(), ThemeMode::Light);
+        assert_eq!("system".parse::<ThemeMode>().unwrap(), ThemeMode::System);
+        assert_eq!("".parse::<ThemeMode>().unwrap(), ThemeMode::System);
     }
 
     #[test]
