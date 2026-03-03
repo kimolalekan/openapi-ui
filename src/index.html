@@ -3249,20 +3249,56 @@
                             const scheme = securitySchemes[name];
                             if (scheme) {
                                 schemes.push({ name, ...scheme });
-                            } else if (name === "bearer_auth") {
-                                // Fallback for common naming if not in components
-                                schemes.push({
-                                    name,
-                                    type: "http",
-                                    scheme: "bearer",
-                                });
-                            } else if (name === "api_key") {
-                                schemes.push({
-                                    name,
-                                    type: "apiKey",
-                                    in: "header",
-                                    name: "X-API-Key",
-                                });
+                            } else {
+                                // Fallback: infer scheme type from name pattern
+                                const nameLower = name.toLowerCase();
+                                if (nameLower.includes("oauth")) {
+                                    schemes.push({
+                                        name,
+                                        type: "oauth2",
+                                    });
+                                } else if (nameLower.includes("auth")) {
+                                    // Catches petstore_auth, home_auth, etc.
+                                    schemes.push({
+                                        name,
+                                        type: "oauth2",
+                                    });
+                                } else if (nameLower === "bearer_auth") {
+                                    schemes.push({
+                                        name,
+                                        type: "http",
+                                        scheme: "bearer",
+                                    });
+                                } else if (
+                                    nameLower === "api_key" ||
+                                    nameLower === "apikey"
+                                ) {
+                                    schemes.push({
+                                        name,
+                                        type: "apiKey",
+                                        in: "header",
+                                        name: "X-API-Key",
+                                    });
+                                } else if (
+                                    nameLower.includes("api") ||
+                                    nameLower.includes("key")
+                                ) {
+                                    schemes.push({
+                                        name,
+                                        type: "apiKey",
+                                        in: "header",
+                                        name:
+                                            name === "api_key"
+                                                ? "X-API-Key"
+                                                : "Authorization",
+                                    });
+                                } else {
+                                    // Default to OAuth2 for unknown auth schemes
+                                    schemes.push({
+                                        name,
+                                        type: "oauth2",
+                                    });
+                                }
                             }
                         });
                     });
