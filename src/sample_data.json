@@ -101,7 +101,7 @@
         ]
       }
     },
-    "/petsss": {
+    "/pet": {
       "post": {
         "tags": ["pet"],
         "summary": "Add a new pet to the store",
