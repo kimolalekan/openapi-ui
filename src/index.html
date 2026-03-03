@@ -609,6 +609,64 @@
                 border-color: var(--accent);
                 background: color-mix(in srgb, var(--accent) 8%, transparent);
             }
+            .ask-ai-btn {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 12px;
+                border-radius: 6px;
+                border: 1px solid var(--accent);
+                background: var(--accent);
+                color: #fff;
+                font-size: 12px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.15s;
+                position: relative;
+            }
+            .ask-ai-btn:hover {
+                background: var(--accent-h);
+                border-color: var(--accent-h);
+            }
+            .ask-ai-btn i {
+                font-size: 13px;
+            }
+            .ask-ai-dropdown {
+                position: absolute;
+                top: calc(100% + 8px);
+                right: 0;
+                background: var(--bg-card);
+                border: 1px solid var(--bd);
+                border-radius: 8px;
+                box-shadow: var(--shadow-md);
+                min-width: 160px;
+                z-index: 1000;
+                overflow: hidden;
+            }
+            .ask-ai-dropdown-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 14px;
+                color: var(--t1);
+                font-size: 13px;
+                cursor: pointer;
+                transition: background 0.15s;
+                text-decoration: none;
+            }
+            .ask-ai-dropdown-item:hover {
+                background: var(--bg-sub);
+            }
+            .ask-ai-dropdown-item i {
+                font-size: 14px;
+                width: 18px;
+                text-align: center;
+            }
+            .ask-ai-dropdown-item.chatgpt i { color: #10a37f; }
+            .ask-ai-dropdown-item.claude i { color: #d97757; }
+            .ask-ai-dropdown-item.deepseek i { color: #3b82f6; }
+            .ask-ai-dropdown-item.mistral i { color: #f97316; }
+            .ask-ai-dropdown-item.qwen i { color: #6b21a8; }
             .sb-srch {
                 padding: 8px 12px;
                 border-bottom: 1px solid var(--bd);
@@ -4569,6 +4627,129 @@
                                 h(
                                     "div",
                                     {
+                                        style: {
+                                            position: "relative",
+                                        },
+                                    },
+                                    h(
+                                        "button",
+                                        {
+                                            className: "ask-ai-btn",
+                                            onClick: (e) => {
+                                                e.stopPropagation();
+                                                const dropdown =
+                                                    e.currentTarget
+                                                        .nextElementSibling;
+                                                if (dropdown) {
+                                                    dropdown.style.display =
+                                                        dropdown.style
+                                                            .display === "block"
+                                                            ? "none"
+                                                            : "block";
+                                                }
+                                            },
+                                        },
+                                        h("i", { className: "fa fa-robot" }),
+                                        "Ask AI",
+                                        h("i", {
+                                            className: "fa fa-chevron-down",
+                                            style: { fontSize: "10px" },
+                                        }),
+                                    ),
+                                    h(
+                                        "div",
+                                        {
+                                            className: "ask-ai-dropdown",
+                                            style: { display: "none" },
+                                        },
+                                        h(
+                                            "a",
+                                            {
+                                                className:
+                                                    "ask-ai-dropdown-item chatgpt",
+                                                href: "#",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    const url = `https://chat.openai.com/?q=${encodeURIComponent("Please read " + window.location.href)}`;
+                                                    window.open(url, "_blank");
+                                                },
+                                            },
+                                            h("i", {
+                                                className: "fa fa-comment-dots",
+                                            }),
+                                            "ChatGPT",
+                                        ),
+                                        h(
+                                            "a",
+                                            {
+                                                className:
+                                                    "ask-ai-dropdown-item claude",
+                                                href: "#",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    const url = `https://claude.ai/new?q=${encodeURIComponent("Please read " + window.location.href)}`;
+                                                    window.open(url, "_blank");
+                                                },
+                                            },
+                                            h("i", {
+                                                className: "fa fa-robot",
+                                            }),
+                                            "Claude",
+                                        ),
+                                        h(
+                                            "a",
+                                            {
+                                                className:
+                                                    "ask-ai-dropdown-item deepseek",
+                                                href: "#",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    const url = `https://chat.deepseek.com/?q=${encodeURIComponent("Please read " + window.location.href)}`;
+                                                    window.open(url, "_blank");
+                                                },
+                                            },
+                                            h("i", {
+                                                className: "fa fa-comments",
+                                            }),
+                                            "DeepSeek",
+                                        ),
+                                        h(
+                                            "a",
+                                            {
+                                                className:
+                                                    "ask-ai-dropdown-item mistral",
+                                                href: "#",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    const url = `https://chat.mistral.ai/chat?q=${encodeURIComponent("Please read " + window.location.href)}`;
+                                                    window.open(url, "_blank");
+                                                },
+                                            },
+                                            h("i", { className: "fa fa-wind" }),
+                                            "Mistral",
+                                        ),
+                                        h(
+                                            "a",
+                                            {
+                                                className:
+                                                    "ask-ai-dropdown-item qwen",
+                                                href: "#",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    const url = `https://chat.qwen.ai/?q=${encodeURIComponent("Please read " + window.location.href)}`;
+                                                    window.open(url, "_blank");
+                                                },
+                                            },
+                                            h("i", {
+                                                className: "fa fa-brain",
+                                            }),
+                                            "Qwen",
+                                        ),
+                                    ),
+                                ),
+                                h(
+                                    "div",
+                                    {
                                         className: `auth-status ${apiKey ? "set" : ""}`,
                                         style: { marginRight: 8 },
                                     },
@@ -4602,6 +4783,21 @@
                     ),
                 );
             }
+
+            // Close Ask AI dropdown when clicking outside
+            document.addEventListener("click", (e) => {
+                const askAiBtn = document.querySelector(".ask-ai-btn");
+                const askAiDropdown =
+                    document.querySelector(".ask-ai-dropdown");
+                if (
+                    askAiDropdown &&
+                    askAiBtn &&
+                    !askAiBtn.contains(e.target) &&
+                    !askAiDropdown.contains(e.target)
+                ) {
+                    askAiDropdown.style.display = "none";
+                }
+            });
 
             createRoot(document.getElementById("root")).render(h(App));
         </script>
