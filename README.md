@@ -1,10 +1,9 @@
 # openapi-ui
 
-[![GitHub](https://img.shields.io/github/v/tag/kimolalekan/openapi-ui?label=version)](https://github.com/kimolalekan/openapi-ui)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/kimolalekan/openapi-ui/rust.yml?branch=main)](https://github.com/kimolalekan/openapi-ui/actions)
 [![Crates.io](https://img.shields.io/crates/v/openapi-ui.svg)](https://crates.io/crates/openapi-ui)
 [![Documentation](https://docs.rs/openapi-ui/badge.svg)](https://docs.rs/openapi-ui)
 [![GitHub License](https://img.shields.io/github/license/kimolalekan/openapi-ui)](https://github.com/kimolalekan/openapi-ui/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/kimolalekan/openapi-ui/rust.yml?branch=main)](https://github.com/kimolalekan/openapi-ui/actions)
 
 A Rust library for generating custom UI for OpenAPI/Swagger documentation.
 
