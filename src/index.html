@@ -662,11 +662,14 @@
                 width: 18px;
                 text-align: center;
             }
-            .ask-ai-dropdown-item.chatgpt i { color: #10a37f; }
-            .ask-ai-dropdown-item.claude i { color: #d97757; }
-            .ask-ai-dropdown-item.deepseek i { color: #3b82f6; }
-            .ask-ai-dropdown-item.mistral i { color: #f97316; }
-            .ask-ai-dropdown-item.qwen i { color: #6b21a8; }
+            .ask-ai-dropdown-item svg {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+            }
+            .ask-ai-dropdown-item.chatgpt svg { fill: #10a37f; }
+            .ask-ai-dropdown-item.claude svg { fill: #d97757; }
+            .ask-ai-dropdown-item.mistral svg { fill: #f97316; }
             .sb-srch {
                 padding: 8px 12px;
                 border-bottom: 1px solid var(--bd);
@@ -4674,9 +4677,13 @@
                                                     window.open(url, "_blank");
                                                 },
                                             },
-                                            h("i", {
-                                                className: "fa fa-comment-dots",
-                                            }),
+                                            h(
+                                                "svg",
+                                                { viewBox: "0 0 24 24" },
+                                                h("path", {
+                                                    d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z",
+                                                }),
+                                            ),
                                             "ChatGPT",
                                         ),
                                         h(
@@ -4691,27 +4698,14 @@
                                                     window.open(url, "_blank");
                                                 },
                                             },
-                                            h("i", {
-                                                className: "fa fa-robot",
-                                            }),
+                                            h(
+                                                "svg",
+                                                { viewBox: "0 0 24 24" },
+                                                h("path", {
+                                                    d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+                                                }),
+                                            ),
                                             "Claude",
-                                        ),
-                                        h(
-                                            "a",
-                                            {
-                                                className:
-                                                    "ask-ai-dropdown-item deepseek",
-                                                href: "#",
-                                                onClick: (e) => {
-                                                    e.preventDefault();
-                                                    const url = `https://chat.deepseek.com/?q=${encodeURIComponent("Please read " + window.location.href)}`;
-                                                    window.open(url, "_blank");
-                                                },
-                                            },
-                                            h("i", {
-                                                className: "fa fa-comments",
-                                            }),
-                                            "DeepSeek",
                                         ),
                                         h(
                                             "a",
@@ -4725,25 +4719,14 @@
                                                     window.open(url, "_blank");
                                                 },
                                             },
-                                            h("i", { className: "fa fa-wind" }),
+                                            h(
+                                                "svg",
+                                                { viewBox: "0 0 24 24" },
+                                                h("path", {
+                                                    d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z",
+                                                }),
+                                            ),
                                             "Mistral",
-                                        ),
-                                        h(
-                                            "a",
-                                            {
-                                                className:
-                                                    "ask-ai-dropdown-item qwen",
-                                                href: "#",
-                                                onClick: (e) => {
-                                                    e.preventDefault();
-                                                    const url = `https://chat.qwen.ai/?q=${encodeURIComponent("Please read " + window.location.href)}`;
-                                                    window.open(url, "_blank");
-                                                },
-                                            },
-                                            h("i", {
-                                                className: "fa fa-brain",
-                                            }),
-                                            "Qwen",
                                         ),
                                     ),
                                 ),
