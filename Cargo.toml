@@ -8,7 +8,7 @@ repository = "https://github.com/kimolalekan/openapi-ui"
 documentation = "https://docs.rs/openapi-ui"
 homepage = "https://kimolalekan.github.io/openapi-ui"
 readme = "README.md"
-keywords = ["openapi", "swagger", "utoipa", "ui", "documentation", "generator"]
+keywords = ["openapi", "swagger", "utoipa", "ui", "documentation"]
 categories = ["development-tools", "visualization", "web-programming"]
 exclude = [".DS_Store", "target", ".git", "Cargo.lock"]
 
