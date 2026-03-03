@@ -1970,7 +1970,27 @@
                     for (const key of Object.keys(sec)) {
                         const scheme = securitySchemes[key];
                         if (scheme) {
-                            activeSchemes.push({ name: key, ...scheme });
+                            activeSchemes.push({ schemeKey: key, ...scheme });
+                        } else {
+                            // Fallback: infer scheme type from key name or use defaults
+                            // This handles cases where securitySchemes is not defined
+                            const inferredType = key.includes("oauth")
+                                ? "oauth2"
+                                : key.includes("bearer")
+                                  ? "http"
+                                  : "apiKey";
+                            activeSchemes.push({
+                                schemeKey: key,
+                                type: inferredType,
+                                scheme: key.includes("bearer")
+                                    ? "bearer"
+                                    : undefined,
+                                name:
+                                    key === "api_key" || key === "apiKey"
+                                        ? "X-API-Key"
+                                        : "Authorization",
+                                in: "header",
+                            });
                         }
                     }
                 }
