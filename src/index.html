@@ -1974,19 +1974,26 @@
                         } else {
                             // Fallback: infer scheme type from key name or use defaults
                             // This handles cases where securitySchemes is not defined
-                            const inferredType = key.includes("oauth")
+                            const keyLower = key.toLowerCase();
+                            const inferredType = keyLower.includes("oauth")
                                 ? "oauth2"
-                                : key.includes("bearer")
-                                  ? "http"
-                                  : "apiKey";
+                                : keyLower.includes("auth")
+                                  ? "oauth2"
+                                  : keyLower.includes("bearer")
+                                    ? "http"
+                                    : keyLower.includes("api") ||
+                                        keyLower.includes("key")
+                                      ? "apiKey"
+                                      : "apiKey";
                             activeSchemes.push({
                                 schemeKey: key,
                                 type: inferredType,
-                                scheme: key.includes("bearer")
+                                scheme: keyLower.includes("bearer")
                                     ? "bearer"
                                     : undefined,
                                 name:
-                                    key === "api_key" || key === "apiKey"
+                                    keyLower === "api_key" ||
+                                    keyLower === "apikey"
                                         ? "X-API-Key"
                                         : "Authorization",
                                 in: "header",
