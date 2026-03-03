@@ -1754,6 +1754,12 @@
                     left: 0;
                     min-width: 180px;
                 }
+                .theme-dropdown {
+                    position: fixed !important;
+                    top: 60px !important;
+                    right: 12px !important;
+                    z-index: 2100 !important;
+                }
                 .ep-hdr {
                     padding: 12px;
                 }
@@ -2036,6 +2042,40 @@
                 }
                 .auth-input-grp {
                     width: 100%;
+                }
+                .ep-hdr {
+                    padding: 12px 16px;
+                }
+                .ep-body {
+                    padding: 12px 16px;
+                }
+                .code-wrap pre {
+                    padding: 10px;
+                    font-size: 11px;
+                }
+                .modal-box {
+                    padding: 12px;
+                }
+                .modal-hd {
+                    padding: 10px;
+                }
+                .modal-bdy {
+                    padding: 10px;
+                }
+                .modal-btns {
+                    padding: 10px;
+                }
+                .params-tbl {
+                    font-size: 12px;
+                }
+                .p-name {
+                    font-size: 12px;
+                }
+                .p-type {
+                    font-size: 11px;
+                }
+                .sec-lbl {
+                    font-size: 11px;
                 }
             }
             /* Mobile sidebar toggle */
@@ -4754,7 +4794,7 @@
                                             border: "1px solid var(--bd)",
                                             borderRadius: "6px",
                                             boxShadow: "var(--shadow-md)",
-                                            zIndex: 100,
+                                            zIndex: 1100,
                                             minWidth: "120px",
                                             overflow: "hidden",
                                         },
@@ -4975,7 +5015,7 @@
                                 }),
                                 h("input", {
                                     type: "text",
-                                    placeholder: "Search endpoints...",
+                                    placeholder: "Search....",
                                     value: mobileSearch,
                                     onChange: (e) =>
                                         setMobileSearch(e.target.value),
