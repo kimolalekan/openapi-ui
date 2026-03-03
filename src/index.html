@@ -1694,10 +1694,274 @@
                 margin-right: 4px;
                 font-size: 10px;
             }
+            /* Responsive Design - Tablet */
+            @media (max-width: 1024px) {
+                .sidebar {
+                    width: 240px;
+                }
+                .ep-btn {
+                    padding: 8px 10px;
+                }
+                .ep-summary {
+                    font-size: 12px;
+                }
+            }
+            /* Responsive Design - Mobile */
+            @media (max-width: 768px) {
+                .app {
+                    flex-direction: column;
+                }
+                .sidebar {
+                    width: 100%;
+                    height: auto;
+                    max-height: 40vh;
+                    border-right: none;
+                    border-bottom: 1px solid var(--bd);
+                }
+                .sb-srch {
+                    padding: 8px;
+                }
+                .sb-nav {
+                    max-height: none;
+                }
+                .main {
+                    width: 100%;
+                }
+                .topbar {
+                    padding: 0 12px;
+                    height: 56px;
+                    flex-wrap: wrap;
+                }
+                .server-pill {
+                    max-width: 100%;
+                    overflow: hidden;
+                }
+                .server-url {
+                    max-width: 200px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .ask-ai-btn {
+                    padding: 6px 10px;
+                    font-size: 11px;
+                }
+                .ask-ai-btn span {
+                    display: none;
+                }
+                .ask-ai-dropdown {
+                    right: auto;
+                    left: 0;
+                    min-width: 180px;
+                }
+                .ep-hdr {
+                    padding: 12px;
+                }
+                .ep-hdr-row {
+                    flex-direction: column;
+                    gap: 12px;
+                }
+                .ep-icon {
+                    width: 48px;
+                    height: 48px;
+                }
+                .ep-icon i {
+                    font-size: 20px;
+                }
+                .ep-summary {
+                    font-size: 14px;
+                }
+                .ep-path-pill {
+                    font-size: 11px;
+                    padding: 3px 8px;
+                }
+                .method-badge {
+                    font-size: 11px;
+                    padding: 4px 8px;
+                }
+                .params-tbl {
+                    display: block;
+                    overflow-x: auto;
+                }
+                .p-row {
+                    min-width: 500px;
+                }
+                .sec-lbl {
+                    font-size: 12px;
+                }
+                .code-wrap pre {
+                    padding: 12px;
+                    font-size: 12px;
+                }
+                .lang-tabs {
+                    flex-wrap: wrap;
+                }
+                .lang-tab {
+                    font-size: 11px;
+                    padding: 6px 10px;
+                }
+                .resp-tabs {
+                    flex-wrap: wrap;
+                }
+                .resp-tab {
+                    font-size: 11px;
+                    padding: 6px 10px;
+                }
+                .test-panel {
+                    padding: 12px;
+                }
+                .test-panel-ttl {
+                    font-size: 13px;
+                }
+                .auth-input {
+                    font-size: 13px;
+                    padding: 8px 10px;
+                }
+                .btn-test {
+                    font-size: 12px;
+                    padding: 8px 16px;
+                }
+                .param-input {
+                    font-size: 13px;
+                    padding: 8px 10px;
+                }
+                .param-type {
+                    font-size: 11px;
+                }
+                .req-body-ta {
+                    font-size: 13px;
+                    padding: 10px;
+                }
+                .response-status {
+                    font-size: 12px;
+                    padding: 4px 10px;
+                }
+                .response-pre {
+                    padding: 12px;
+                    font-size: 12px;
+                }
+                .modal-box {
+                    width: 95%;
+                    max-width: none;
+                    margin: 10px;
+                }
+                .modal-hd {
+                    padding: 12px;
+                }
+                .modal-bdy {
+                    padding: 12px;
+                }
+                .modal-btns {
+                    padding: 12px;
+                }
+                .empty {
+                    padding: 20px;
+                }
+                .empty i {
+                    font-size: 32px;
+                }
+                .empty p {
+                    font-size: 13px;
+                }
+            }
+            /* Extra Small Mobile */
+            @media (max-width: 480px) {
+                .sidebar {
+                    max-height: 35vh;
+                }
+                .topbar {
+                    height: auto;
+                    min-height: 56px;
+                    padding: 8px 12px;
+                }
+                .server-pill {
+                    font-size: 10px;
+                    padding: 3px 6px;
+                }
+                .ask-ai-btn {
+                    padding: 8px;
+                }
+                .ep-icon {
+                    width: 40px;
+                    height: 40px;
+                }
+                .ep-icon i {
+                    font-size: 18px;
+                }
+                .ep-summary {
+                    font-size: 13px;
+                }
+                .ep-deprecated {
+                    font-size: 9px;
+                    padding: 2px 6px;
+                }
+                .method-badge {
+                    font-size: 10px;
+                    padding: 3px 6px;
+                }
+                .p-row {
+                    min-width: 450px;
+                }
+                .btn-test {
+                    width: 100%;
+                    justify-content: center;
+                }
+                .auth-input-grp {
+                    width: 100%;
+                }
+            }
+            /* Mobile sidebar toggle */
+            .sidebar.mobile-hidden {
+                transform: translateX(-100%);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 1000;
+                transition: transform 0.3s ease;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+            .mobile-menu-toggle {
+                display: none;
+                width: 40px;
+                height: 40px;
+                align-items: center;
+                justify-content: center;
+                border-radius: 6px;
+                background: transparent;
+                border: 1px solid var(--bd);
+                color: var(--t1);
+                cursor: pointer;
+                margin-right: 8px;
+            }
+            @media (max-width: 768px) {
+                .mobile-menu-toggle {
+                    display: flex;
+                }
+                .sidebar.mobile-hidden {
+                    transform: translateX(-100%);
+                }
+                .sidebar.mobile-visible {
+                    transform: translateX(0);
+                }
+            }
         </style>
     </head>
     <body>
         <div id="root"></div>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <script type="module">
             import {
                 createElement as h,
@@ -4298,6 +4562,33 @@
                         h(
                             "div",
                             { className: "sb-brand" },
+                            h(
+                                "button",
+                                {
+                                    className: "mobile-menu-toggle",
+                                    onClick: () => {
+                                        const sidebar =
+                                            document.querySelector(".sidebar");
+                                        const overlay =
+                                            document.getElementById(
+                                                "sidebarOverlay",
+                                            );
+                                        if (sidebar) {
+                                            sidebar.classList.toggle(
+                                                "mobile-hidden",
+                                            );
+                                            sidebar.classList.toggle(
+                                                "mobile-visible",
+                                            );
+                                        }
+                                        if (overlay) {
+                                            overlay.classList.toggle("active");
+                                        }
+                                    },
+                                    title: "Toggle menu",
+                                },
+                                h("i", { className: "fa fa-bars" }),
+                            ),
                             spec.info?.["x-logo"]
                                 ? h("img", {
                                       className: "sb-logo sb-logo-img",
@@ -5106,6 +5397,31 @@
                     askAiDropdown.style.display = "none";
                 }
             });
+
+            // Close mobile sidebar when clicking overlay
+            document.addEventListener("click", (e) => {
+                const overlay = document.getElementById("sidebarOverlay");
+                const sidebar = document.querySelector(".sidebar");
+                if (
+                    overlay &&
+                    overlay.classList.contains("active") &&
+                    e.target === overlay
+                ) {
+                    overlay.classList.remove("active");
+                    if (sidebar) {
+                        sidebar.classList.remove("mobile-visible");
+                        sidebar.classList.add("mobile-hidden");
+                    }
+                }
+            });
+
+            // Initialize sidebar state on mobile
+            if (window.innerWidth <= 768) {
+                const sidebar = document.querySelector(".sidebar");
+                if (sidebar) {
+                    sidebar.classList.add("mobile-hidden");
+                }
+            }
 
             createRoot(document.getElementById("root")).render(h(App));
         </script>
