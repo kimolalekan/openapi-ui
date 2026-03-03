@@ -1960,6 +1960,18 @@
                         );
                     }),
                 );
+                const hasOAuth2 = security.some((s) =>
+                    Object.keys(s).some((key) => {
+                        const scheme = spec.components?.securitySchemes?.[key];
+                        return scheme?.type === "oauth2";
+                    }),
+                );
+                const hasOpenIdConnect = security.some((s) =>
+                    Object.keys(s).some((key) => {
+                        const scheme = spec.components?.securitySchemes?.[key];
+                        return scheme?.type === "openIdConnect";
+                    }),
+                );
                 const apiKeyName = (() => {
                     for (const sec of security) {
                         for (const key of Object.keys(sec)) {
@@ -1981,6 +1993,11 @@
                     if (hasBearer) {
                         lines.push(`  -H 'Authorization: Bearer YOUR_TOKEN'`);
                     }
+                    if (hasOAuth2 || hasOpenIdConnect) {
+                        lines.push(
+                            `  -H 'Authorization: Bearer YOUR_OAUTH_TOKEN'`,
+                        );
+                    }
                     if (hasBody) {
                         lines.push(`  -H 'Content-Type: application/json'`);
                         lines.push(`  -d '${JSON.stringify(body)}'`);
@@ -1996,6 +2013,11 @@
                     if (hasBearer) {
                         authHeaders.push(
                             `    'Authorization': 'Bearer YOUR_TOKEN'`,
+                        );
+                    }
+                    if (hasOAuth2 || hasOpenIdConnect) {
+                        authHeaders.push(
+                            `    'Authorization': 'Bearer YOUR_OAUTH_TOKEN'`,
                         );
                     }
                     if (hasBody) {
@@ -2030,6 +2052,11 @@
                             `    "Authorization": "Bearer YOUR_TOKEN",`,
                         );
                     }
+                    if (hasOAuth2 || hasOpenIdConnect) {
+                        authLines.push(
+                            `    "Authorization": "Bearer YOUR_OAUTH_TOKEN",`,
+                        );
+                    }
                     if (hasBody) {
                         authLines.push(
                             `    "Content-Type": "application/json",`,
@@ -2053,6 +2080,11 @@
                     if (hasBearer) {
                         authLines.push(`    "Authorization: Bearer " . $token`);
                     }
+                    if (hasOAuth2 || hasOpenIdConnect) {
+                        authLines.push(
+                            `    "Authorization: Bearer " . $oauthToken`,
+                        );
+                    }
                     if (hasBody) {
                         authLines.push(`    "Content-Type: application/json"`);
                     }
@@ -2063,6 +2095,9 @@
                         `$url    = "${url}${qStr}";`,
                         hasApiKey ? `$apiKey = "YOUR_API_KEY";` : ``,
                         hasBearer ? `$token = "YOUR_TOKEN";` : ``,
+                        hasOAuth2 || hasOpenIdConnect
+                            ? `$oauthToken = "YOUR_OAUTH_TOKEN";`
+                            : ``,
                         ``,
                         `$ch = curl_init($url);`,
                         `curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);`,
@@ -2112,6 +2147,11 @@
                             `\treq.Header.Set("Authorization", "Bearer YOUR_TOKEN")`,
                         );
                     }
+                    if (hasOAuth2 || hasOpenIdConnect) {
+                        authLines.push(
+                            `\treq.Header.Set("Authorization", "Bearer YOUR_OAUTH_TOKEN")`,
+                        );
+                    }
                     return [
                         `package main`,
                         ``,
@@ -2148,6 +2188,11 @@
                     if (hasBearer) {
                         authLines.push(
                             `        .header("Authorization", "Bearer YOUR_TOKEN")`,
+                        );
+                    }
+                    if (hasOAuth2 || hasOpenIdConnect) {
+                        authLines.push(
+                            `        .header("Authorization", "Bearer YOUR_OAUTH_TOKEN")`,
                         );
                     }
                     const bLines = hasBody
