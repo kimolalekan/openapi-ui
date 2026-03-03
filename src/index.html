@@ -1943,11 +1943,44 @@
                 const hasBody = !!bodyStr && !isMP;
                 const M = method.toUpperCase();
 
+                // Check security requirements
+                const security = op.security || spec.security || [];
+                const hasApiKey = security.some((s) =>
+                    Object.keys(s).some((key) => {
+                        const scheme = spec.components?.securitySchemes?.[key];
+                        return scheme?.type === "apiKey";
+                    }),
+                );
+                const hasBearer = security.some((s) =>
+                    Object.keys(s).some((key) => {
+                        const scheme = spec.components?.securitySchemes?.[key];
+                        return (
+                            scheme?.type === "http" &&
+                            scheme?.scheme === "bearer"
+                        );
+                    }),
+                );
+                const apiKeyName = (() => {
+                    for (const sec of security) {
+                        for (const key of Object.keys(sec)) {
+                            const scheme =
+                                spec.components?.securitySchemes?.[key];
+                            if (scheme?.type === "apiKey") {
+                                return scheme.name || "X-API-Key";
+                            }
+                        }
+                    }
+                    return "X-API-Key";
+                })();
+
                 if (lang === "curl") {
-                    const lines = [
-                        `curl -X ${M} '${url}${qStr}'`,
-                        `  -H 'X-API-Key: YOUR_API_KEY'`,
-                    ];
+                    const lines = [`curl -X ${M} '${url}${qStr}'`];
+                    if (hasApiKey) {
+                        lines.push(`  -H '${apiKeyName}: YOUR_API_KEY'`);
+                    }
+                    if (hasBearer) {
+                        lines.push(`  -H 'Authorization: Bearer YOUR_TOKEN'`);
+                    }
                     if (hasBody) {
                         lines.push(`  -H 'Content-Type: application/json'`);
                         lines.push(`  -d '${JSON.stringify(body)}'`);
@@ -1956,10 +1989,24 @@
                     return lines.join(" \\\n");
                 }
                 if (lang === "javascript") {
-                    const hdrs = `'X-API-Key': 'YOUR_API_KEY'${hasBody ? ",\n    'Content-Type': 'application/json'" : ""}`;
+                    const authHeaders = [];
+                    if (hasApiKey) {
+                        authHeaders.push(`    '${apiKeyName}': 'YOUR_API_KEY'`);
+                    }
+                    if (hasBearer) {
+                        authHeaders.push(
+                            `    'Authorization': 'Bearer YOUR_TOKEN'`,
+                        );
+                    }
+                    if (hasBody) {
+                        authHeaders.push(
+                            `    'Content-Type': 'application/json'`,
+                        );
+                    }
+                    const hdrs = authHeaders.join(",\n");
                     const opts = [
                         `  method: '${M}'`,
-                        `  headers: {\n    ${hdrs}\n  }`,
+                        `  headers: {\n${hdrs}\n  }`,
                     ];
                     if (hasBody)
                         opts.push(
@@ -1974,24 +2021,48 @@
                               .replace(/true/g, "True")
                               .replace(/false/g, "False")
                         : null;
+                    const authLines = [];
+                    if (hasApiKey) {
+                        authLines.push(`    "${apiKeyName}": "YOUR_API_KEY",`);
+                    }
+                    if (hasBearer) {
+                        authLines.push(
+                            `    "Authorization": "Bearer YOUR_TOKEN",`,
+                        );
+                    }
+                    if (hasBody) {
+                        authLines.push(
+                            `    "Content-Type": "application/json",`,
+                        );
+                    }
                     return [
                         `import requests`,
                         ``,
                         `url = "${url}${qStr}"`,
-                        `headers = {\n    "X-API-Key": "YOUR_API_KEY",${hasBody ? '\n    "Content-Type": "application/json",' : ""}`,
-                        `}`,
+                        `headers = {\n${authLines.join("\n")}}`,
                         ...(pyBody ? [``, `payload = ${pyBody}`, ``] : [``]),
                         `response = requests.${method}(url, headers=headers${hasBody ? ", json=payload" : isMP ? ', files={"file": open("/path/to/file","rb")}' : ""})`,
                         `print(response.json())`,
                     ].join("\n");
                 }
                 if (lang === "php") {
-                    const hdrs = `"X-API-Key: " . $apiKey${hasBody ? ',\n    "Content-Type: application/json"' : ""}`;
+                    const authLines = [];
+                    if (hasApiKey) {
+                        authLines.push(`    "${apiKeyName}: " . $apiKey`);
+                    }
+                    if (hasBearer) {
+                        authLines.push(`    "Authorization: Bearer " . $token`);
+                    }
+                    if (hasBody) {
+                        authLines.push(`    "Content-Type: application/json"`);
+                    }
+                    const hdrs = authLines.join(",\n");
                     return [
                         `<?php`,
                         ``,
                         `$url    = "${url}${qStr}";`,
-                        `$apiKey = "YOUR_API_KEY";`,
+                        hasApiKey ? `$apiKey = "YOUR_API_KEY";` : ``,
+                        hasBearer ? `$token = "YOUR_TOKEN";` : ``,
                         ``,
                         `$ch = curl_init($url);`,
                         `curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);`,
@@ -2010,7 +2081,9 @@
                         ``,
                         `$data = json_decode($response, true);`,
                         `print_r($data);`,
-                    ].join("\n");
+                    ]
+                        .filter(Boolean)
+                        .join("\n");
                 }
                 if (lang === "go") {
                     const imp = hasBody
@@ -2028,6 +2101,17 @@
                               `\treq, _ := http.NewRequest("${M}", url, bytes.NewBuffer(jsonData))`,
                           ]
                         : [`\treq, _ := http.NewRequest("${M}", url, nil)`];
+                    const authLines = [];
+                    if (hasApiKey) {
+                        authLines.push(
+                            `\treq.Header.Set("${apiKeyName}", "YOUR_API_KEY")`,
+                        );
+                    }
+                    if (hasBearer) {
+                        authLines.push(
+                            `\treq.Header.Set("Authorization", "Bearer YOUR_TOKEN")`,
+                        );
+                    }
                     return [
                         `package main`,
                         ``,
@@ -2037,7 +2121,7 @@
                         `\turl := "${url}${qStr}"`,
                         ``,
                         ...bLines,
-                        `\treq.Header.Set("X-API-Key", "YOUR_API_KEY")`,
+                        ...authLines,
                         ...(hasBody
                             ? [
                                   `\treq.Header.Set("Content-Type", "application/json")`,
@@ -2055,18 +2139,29 @@
                     ].join("\n");
                 }
                 if (lang === "rust") {
+                    const authLines = [];
+                    if (hasApiKey) {
+                        authLines.push(
+                            `        .header("${apiKeyName}", "YOUR_API_KEY")`,
+                        );
+                    }
+                    if (hasBearer) {
+                        authLines.push(
+                            `        .header("Authorization", "Bearer YOUR_TOKEN")`,
+                        );
+                    }
                     const bLines = hasBody
                         ? [
                               `    let payload = serde_json::json!(${bodyStr});`,
                               ``,
                               `    let res = client.${method}(&url)`,
-                              `        .header("X-API-Key", "YOUR_API_KEY")`,
+                              ...authLines,
                               `        .json(&payload)`,
                               `        .send().await?;`,
                           ]
                         : [
                               `    let res = client.${method}(&url)`,
-                              `        .header("X-API-Key", "YOUR_API_KEY")`,
+                              ...authLines,
                               `        .send().await?;`,
                           ];
                     return [
