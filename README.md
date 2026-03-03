@@ -7,8 +7,7 @@
 
 A Rust library for generating custom UI for OpenAPI/Swagger documentation.
 
-**[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)** | **[📦 GitHub Repository](https://github.com/kimolalekan/openapi-ui)**
-
+**[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)** 
 ## Table of Contents
 
 - [Features](#features)
@@ -42,7 +41,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-openapi-ui = "0.1.0"
+openapi-ui = "0.1.6"
 ```
 
 ## Quick Start
