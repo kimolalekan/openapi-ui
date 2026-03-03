@@ -1,6 +1,7 @@
-#[macro_use] extern crate rocket;
-use rocket::response::content::RawHtml;
+#[macro_use]
+extern crate rocket;
 use openapi_ui::{generate_docs, ThemeMode};
+use rocket::response::content::RawHtml;
 
 // In a real app, generate your OpenAPI JSON using utoipa:
 //

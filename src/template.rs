@@ -12,6 +12,7 @@ const SAMPLE_DATA: &str = include_str!("sample_data.json");
 pub fn template(spec: &OpenAPISpec, theme_name: &str, favicon: &str) -> String {
     let spec_json = serde_json::to_string(spec).unwrap_or_default();
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
+    let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
     let mode = theme::ThemeMode::from_str(theme_name);
 
@@ -21,6 +22,7 @@ pub fn template(spec: &OpenAPISpec, theme_name: &str, favicon: &str) -> String {
         .replace("{{theme}}", mode.as_str())
         .replace("{{favicon}}", favicon)
         .replace("/* SPEC_JSON_PLACEHOLDER */ null", &js_string)
+        .replace("/* SAMPLE_DATA_PLACEHOLDER */ null", &sample_data_js)
 }
 
 /// Renders the HTML template with optional custom CSS injected after the built-in themes.
@@ -32,6 +34,7 @@ pub fn template_with_custom_theme(
 ) -> String {
     let spec_json = serde_json::to_string(spec).unwrap_or_default();
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
+    let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
     let mode = theme::ThemeMode::from_str(theme_name);
     let inject_theme_script = mode == theme::ThemeMode::System;
@@ -51,17 +54,18 @@ pub fn template_with_custom_theme(
         .replace("{{dark}}", &dark_content)
         .replace("{{theme}}", mode.as_str())
         .replace("{{favicon}}", favicon)
-        .replace("/* SPEC_JSON_PLACEHOLDER */ null", &js_string);
+        .replace("/* SPEC_JSON_PLACEHOLDER */ null", &js_string)
+        .replace("/* SAMPLE_DATA_PLACEHOLDER */ null", &sample_data_js);
 
     if inject_theme_script {
         html = html.replace("<head>", &format!("<head>\n        {}", theme_script));
     }
 
     if let Some(css) = custom_css {
-        html.replace("</head>", &format!("<style>{}</style></head>", css))
-    } else {
-        html
+        html = html.replace("</head>", &format!("<style>{}</style></head>", css));
     }
+
+    html
 }
 
 /// Renders a demo template using the built-in Petstore sample data.
@@ -81,13 +85,10 @@ pub fn base_template() -> String {
 }
 
 /// Renders the HTML template with embedded theme CSS.
-pub fn template_with_embedded_theme(
-    spec: &OpenAPISpec,
-    theme_name: &str,
-    favicon: &str,
-) -> String {
+pub fn template_with_embedded_theme(spec: &OpenAPISpec, theme_name: &str, favicon: &str) -> String {
     let spec_json = serde_json::to_string(spec).unwrap_or_default();
     let js_string = serde_json::to_string(&spec_json).unwrap_or_default();
+    let sample_data_js = serde_json::to_string(SAMPLE_DATA).unwrap_or_default();
 
     let mode = theme::ThemeMode::from_str(theme_name);
 
@@ -97,6 +98,7 @@ pub fn template_with_embedded_theme(
         .replace("{{theme}}", mode.as_str())
         .replace("{{favicon}}", favicon)
         .replace("/* SPEC_JSON_PLACEHOLDER */ null", &js_string)
+        .replace("/* SAMPLE_DATA_PLACEHOLDER */ null", &sample_data_js)
 }
 
 #[cfg(test)]
@@ -214,7 +216,6 @@ mod tests {
         assert!(html.contains("if(!t||t===\"system\")"));
 
         assert!(html.contains("setAttribute(\"data-theme\",t)"));
-
     }
 
     #[test]

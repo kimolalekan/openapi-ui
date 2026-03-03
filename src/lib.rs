@@ -7,7 +7,7 @@
 //! `openapi-ui` is a library for generating custom documentation UIs from OpenAPI specifications.
 //!
 //! It takes an OpenAPI JSON string and produces a self-contained HTML file with a responsive UI.
-//! 
+//!
 //! **[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)**
 //!
 //! ## Web Framework Examples
@@ -41,11 +41,12 @@
 //! use openapi_ui::{generate_docs, ThemeMode};
 //!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     let openapi_json = r#"{"openapi": "3.0.0", "info": {"title": "API", "version": "1.0.0"}, "paths": {}}"#;
-//!     
+//!     // Use the sample Petstore API spec (or your own OpenAPI JSON)
+//!     let openapi_json = include_str!("sample_data.json");
+//!
 //!     // Generate HTML with system theme and default favicon
 //!     let html = generate_docs(openapi_json, ThemeMode::System, None, None)?;
-//!     
+//!
 //!     std::fs::write("docs.html", html)?;
 //!     Ok(())
 //! }
@@ -55,11 +56,19 @@
 //!
 //! ```rust
 //! use openapi_ui::{UIBuilder, OpenAPISpec};
+//! use std::fs;
 //!
-//! # fn run(spec: OpenAPISpec) -> Result<(), Box<dyn std::error::Error>> {
+//! # fn run() -> Result<(), Box<dyn std::error::Error>> {
+//! // Load your OpenAPI spec from file
+//! let spec_json = fs::read_to_string("openapi.json")?;
+//! let spec: OpenAPISpec = serde_json::from_str(&spec_json)?;
+//!
 //! let html = UIBuilder::new(spec)
 //!     .theme("dark")
+//!     .base_url("https://api.example.com")
 //!     .build();
+//!
+//! fs::write("docs.html", html)?;
 //! # Ok(())
 //! # }
 //! ```
@@ -72,5 +81,5 @@ pub mod ui;
 
 pub use error::{Result, UIError};
 pub use openapi::{HttpScheme, OpenAPISpec, SchemaType};
-pub use theme::{ThemeMode, get_complete_theme_css, get_theme_css};
-pub use ui::{UIBuilder, UIConfig, generate_base_ui, generate_docs, generate_ui};
+pub use theme::{get_complete_theme_css, get_theme_css, ThemeMode};
+pub use ui::{generate_base_ui, generate_docs, generate_ui, UIBuilder, UIConfig};

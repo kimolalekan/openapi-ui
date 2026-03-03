@@ -1,5 +1,5 @@
-use poem::{get, handler, listener::TcpListener, Route, Server};
 use openapi_ui::{generate_docs, ThemeMode};
+use poem::{get, handler, listener::TcpListener, Route, Server};
 
 // In a real app, generate your OpenAPI JSON using utoipa:
 //

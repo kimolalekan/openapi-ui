@@ -1,5 +1,5 @@
-use salvo::prelude::*;
 use openapi_ui::{generate_docs, ThemeMode};
+use salvo::prelude::*;
 
 // In a real app, generate your OpenAPI JSON using utoipa:
 //

@@ -38,7 +38,9 @@ impl Default for UIConfig {
             },
             theme: "system".to_string(),
             base_url: None,
-            favicon: "https://www.openapis.org/wp-content/uploads/sites/31/2019/06/favicon-140x140.png".to_string(),
+            favicon:
+                "https://www.openapis.org/wp-content/uploads/sites/31/2019/06/favicon-140x140.png"
+                    .to_string(),
         }
     }
 }
@@ -118,7 +120,9 @@ pub fn generate_docs(
         return Ok(generate_base_ui());
     }
     let spec: OpenAPISpec = serde_json::from_str(json).map_err(UIError::JsonError)?;
-    let fav = favicon.unwrap_or("https://www.openapis.org/wp-content/uploads/sites/31/2019/06/favicon-140x140.png");
+    let fav = favicon.unwrap_or(
+        "https://www.openapis.org/wp-content/uploads/sites/31/2019/06/favicon-140x140.png",
+    );
     Ok(template_with_custom_theme(
         &spec,
         mode.as_str(),
