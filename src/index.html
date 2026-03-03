@@ -900,6 +900,23 @@
                 color: var(--t3);
                 margin-top: 4px;
             }
+            .ep-deprecated {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                border-radius: 4px;
+                background: color-mix(in srgb, var(--red) 15%, transparent);
+                color: var(--red);
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                margin-left: 8px;
+            }
+            .ep-deprecated i {
+                font-size: 10px;
+            }
             .ep-path-pill {
                 font-family: monospace;
                 font-size: 13px;
@@ -1554,9 +1571,9 @@
             }
             .response-status {
                 font-family: monospace;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 500;
-                padding: 6px 12px;
+                padding: 5px 10px;
                 border-radius: 6px;
                 border: 1px solid;
                 display: inline-flex;
@@ -4102,7 +4119,16 @@
                                         },
                                     },
                                     h(MethodBadge, { method }),
-
+                                    op.deprecated &&
+                                        h(
+                                            "span",
+                                            { className: "ep-deprecated" },
+                                            h("i", {
+                                                className:
+                                                    "fa fa-exclamation-triangle",
+                                            }),
+                                            "Deprecated",
+                                        ),
                                     (op.security || spec.security) &&
                                         h(
                                             "span",
