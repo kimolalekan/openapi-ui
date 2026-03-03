@@ -1863,6 +1863,134 @@
                 .empty p {
                     font-size: 13px;
                 }
+                /* Hide sidebar search, nav, and footer on mobile */
+                .sb-srch,
+                .sb-nav,
+                .sb-foot {
+                    display: none;
+                }
+                /* Mobile menu modal */
+                .mobile-menu-modal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: var(--bg);
+                    z-index: 2000;
+                    flex-direction: column;
+                }
+                .mobile-menu-modal.active {
+                    display: flex;
+                }
+                .mobile-menu-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 12px 16px;
+                    border-bottom: 1px solid var(--bd);
+                    background: var(--bg-sub);
+                    flex-shrink: 0;
+                }
+                .mobile-menu-title {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--t1);
+                }
+                .mobile-menu-close {
+                    width: 36px;
+                    height: 36px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 6px;
+                    background: transparent;
+                    border: 1px solid var(--bd);
+                    color: var(--t1);
+                    cursor: pointer;
+                }
+                .mobile-menu-search {
+                    padding: 12px 16px;
+                    border-bottom: 1px solid var(--bd);
+                    background: var(--bg-card);
+                    flex-shrink: 0;
+                }
+                .mobile-menu-search input {
+                    width: 100%;
+                    padding: 10px 12px 10px 36px;
+                    border-radius: 8px;
+                    border: 1px solid var(--bd);
+                    background: var(--bg);
+                    color: var(--t1);
+                    font-size: 14px;
+                }
+                .mobile-menu-search-icon {
+                    position: absolute;
+                    left: 28px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--t4);
+                    font-size: 12px;
+                    pointer-events: none;
+                }
+                .mobile-menu-content {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: 8px 0;
+                }
+                .mobile-menu-group {
+                    padding: 8px 0;
+                    border-bottom: 1px solid var(--bd-sub);
+                }
+                .mobile-menu-group-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 8px 16px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--t3);
+                    text-transform: uppercase;
+                    letter-spacing: 0.06em;
+                    cursor: pointer;
+                }
+                .mobile-menu-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 16px;
+                    color: var(--t1);
+                    font-size: 13px;
+                    cursor: pointer;
+                    transition: background 0.15s;
+                    text-decoration: none;
+                }
+                .mobile-menu-item:hover {
+                    background: var(--bg-sub);
+                }
+                .mobile-menu-item.on {
+                    color: var(--accent);
+                    background: var(--accent-bg);
+                }
+                .mobile-menu-method {
+                    width: 52px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 4px;
+                    font-size: 10px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    flex-shrink: 0;
+                }
+                .mobile-menu-summary {
+                    flex: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
             }
             /* Extra Small Mobile */
             @media (max-width: 480px) {
@@ -1920,23 +2048,10 @@
                 z-index: 1000;
                 transition: transform 0.3s ease;
             }
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 999;
-            }
-            .sidebar-overlay.active {
-                display: block;
-            }
             .mobile-menu-toggle {
                 display: none;
-                width: 40px;
-                height: 40px;
+                width: 36px;
+                height: 36px;
                 align-items: center;
                 justify-content: center;
                 border-radius: 6px;
@@ -1944,7 +2059,6 @@
                 border: 1px solid var(--bd);
                 color: var(--t1);
                 cursor: pointer;
-                margin-right: 8px;
             }
             @media (max-width: 768px) {
                 .mobile-menu-toggle {
@@ -1961,7 +2075,6 @@
     </head>
     <body>
         <div id="root"></div>
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <script type="module">
             import {
                 createElement as h,
@@ -4553,6 +4666,10 @@
                 const currentTheme =
                     themeOptions.find((t) => t.value === theme) ||
                     themeOptions[0];
+
+                const [showMobileMenu, setShowMobileMenu] = useState(false);
+                const [mobileSearch, setMobileSearch] = useState("");
+
                 return h(
                     Fragment,
                     null,
@@ -4566,28 +4683,20 @@
                                 "button",
                                 {
                                     className: "mobile-menu-toggle",
-                                    onClick: () => {
-                                        const sidebar =
-                                            document.querySelector(".sidebar");
-                                        const overlay =
-                                            document.getElementById(
-                                                "sidebarOverlay",
-                                            );
-                                        if (sidebar) {
-                                            sidebar.classList.toggle(
-                                                "mobile-hidden",
-                                            );
-                                            sidebar.classList.toggle(
-                                                "mobile-visible",
-                                            );
-                                        }
-                                        if (overlay) {
-                                            overlay.classList.toggle("active");
-                                        }
-                                    },
-                                    title: "Toggle menu",
+                                    onClick: () => setShowMobileMenu(true),
+                                    title: "Open menu",
                                 },
                                 h("i", { className: "fa fa-bars" }),
+                            ),
+                            h(
+                                "button",
+                                {
+                                    className: "mobile-menu-toggle",
+                                    onClick: () => setShowMobileMenu(true),
+                                    title: "Search endpoints",
+                                    style: { marginLeft: "4px" },
+                                },
+                                h("i", { className: "fa fa-search" }),
                             ),
                             spec.info?.["x-logo"]
                                 ? h("img", {
@@ -4828,6 +4937,124 @@
                             spec.openapi,
                         ),
                     ),
+                    // Mobile Menu Modal
+                    showMobileMenu &&
+                        h(
+                            "div",
+                            {
+                                className:
+                                    "mobile-menu-modal" +
+                                    (showMobileMenu ? " active" : ""),
+                            },
+                            h(
+                                "div",
+                                { className: "mobile-menu-header" },
+                                h(
+                                    "span",
+                                    { className: "mobile-menu-title" },
+                                    "Menu",
+                                ),
+                                h(
+                                    "button",
+                                    {
+                                        className: "mobile-menu-close",
+                                        onClick: () => setShowMobileMenu(false),
+                                    },
+                                    h("i", { className: "fa fa-times" }),
+                                ),
+                            ),
+                            h(
+                                "div",
+                                {
+                                    className: "mobile-menu-search",
+                                    style: { position: "relative" },
+                                },
+                                h("i", {
+                                    className:
+                                        "mobile-menu-search-icon fa fa-search",
+                                }),
+                                h("input", {
+                                    type: "text",
+                                    placeholder: "Search endpoints...",
+                                    value: mobileSearch,
+                                    onChange: (e) =>
+                                        setMobileSearch(e.target.value),
+                                }),
+                            ),
+                            h(
+                                "div",
+                                { className: "mobile-menu-content" },
+                                Object.entries(grouped).map(([tag, eps]) => {
+                                    const filtered = mobileSearch
+                                        ? eps.filter(
+                                              (ep) =>
+                                                  ep.op.summary
+                                                      ?.toLowerCase()
+                                                      .includes(
+                                                          mobileSearch.toLowerCase(),
+                                                      ) ||
+                                                  ep.path
+                                                      .toLowerCase()
+                                                      .includes(
+                                                          mobileSearch.toLowerCase(),
+                                                      ),
+                                          )
+                                        : eps;
+                                    if (filtered.length === 0) return null;
+                                    return h(
+                                        "div",
+                                        {
+                                            key: tag,
+                                            className: "mobile-menu-group",
+                                        },
+                                        h(
+                                            "div",
+                                            {
+                                                className:
+                                                    "mobile-menu-group-header",
+                                            },
+                                            h("span", null, tag),
+                                        ),
+                                        filtered.map((ep) =>
+                                            h(
+                                                "div",
+                                                {
+                                                    key: ep.id,
+                                                    className:
+                                                        "mobile-menu-item" +
+                                                        (activeId === ep.id
+                                                            ? " on"
+                                                            : ""),
+                                                    onClick: () => {
+                                                        onSelect(ep);
+                                                        setShowMobileMenu(
+                                                            false,
+                                                        );
+                                                    },
+                                                },
+                                                h(
+                                                    "span",
+                                                    {
+                                                        className:
+                                                            "mobile-menu-method mbg-" +
+                                                            ep.method,
+                                                    },
+                                                    ep.method.toUpperCase(),
+                                                ),
+                                                h(
+                                                    "span",
+                                                    {
+                                                        className:
+                                                            "mobile-menu-summary",
+                                                    },
+                                                    ep.op.summary || ep.path,
+                                                ),
+                                            ),
+                                        ),
+                                    );
+                                }),
+                            ),
+                        ),
                 );
             }
 
@@ -5397,31 +5624,6 @@
                     askAiDropdown.style.display = "none";
                 }
             });
-
-            // Close mobile sidebar when clicking overlay
-            document.addEventListener("click", (e) => {
-                const overlay = document.getElementById("sidebarOverlay");
-                const sidebar = document.querySelector(".sidebar");
-                if (
-                    overlay &&
-                    overlay.classList.contains("active") &&
-                    e.target === overlay
-                ) {
-                    overlay.classList.remove("active");
-                    if (sidebar) {
-                        sidebar.classList.remove("mobile-visible");
-                        sidebar.classList.add("mobile-hidden");
-                    }
-                }
-            });
-
-            // Initialize sidebar state on mobile
-            if (window.innerWidth <= 768) {
-                const sidebar = document.querySelector(".sidebar");
-                if (sidebar) {
-                    sidebar.classList.add("mobile-hidden");
-                }
-            }
 
             createRoot(document.getElementById("root")).render(h(App));
         </script>
