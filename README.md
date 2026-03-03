@@ -41,7 +41,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-openapi-ui = "0.1.7"
+openapi-ui = "0.1.8"
 ```
 
 ## Quick Start
