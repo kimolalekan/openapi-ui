@@ -2727,6 +2727,7 @@
                             return rawText;
                         case "empty":
                             return "";
+                        case "text":
                         default:
                             return rawText;
                     }
@@ -2739,6 +2740,8 @@
                             return "json";
                         case "html":
                             return "xml"; // highlight.js uses xml for HTML
+                        case "text":
+                            return "plaintext";
                         case "empty":
                             return "plaintext";
                         default:
@@ -3112,12 +3115,17 @@
                                 method: ep.method.toUpperCase(),
                             });
                         } catch (e) {
-                            // Network error - don't create fake response data
-                            // The response will remain null, showing "Click 'Send Request'" state
-                            // or we can show a network error message
-                            alert(
-                                `Network Error: ${e.message}\n\nPlease check:\n- The server is running\n- CORS is properly configured\n- Your network connection`,
-                            );
+                            // Network error - display as text response
+                            setResponse({
+                                status: 0,
+                                statusText: "Network Error",
+                                data: {
+                                    raw: `Network Error: ${e.message}\n\nPlease check:\n- The server is running\n- CORS is properly configured\n- Your network connection`,
+                                },
+                                headers: {},
+                                responseType: "text",
+                                method: ep.method.toUpperCase(),
+                            });
                         } finally {
                             setLoading(false);
                         }
@@ -3153,7 +3161,17 @@
                             options.body = JSON.parse(bodyText);
                         } catch (e) {
                             setLoading(false);
-                            alert(`Invalid JSON: ${e.message}`);
+                            // Invalid JSON - display as text response
+                            setResponse({
+                                status: 400,
+                                statusText: "Invalid JSON",
+                                data: {
+                                    raw: `Invalid JSON: ${e.message}`,
+                                },
+                                headers: {},
+                                responseType: "text",
+                                method: ep.method.toUpperCase(),
+                            });
                             return;
                         }
                     }
