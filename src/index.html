@@ -1731,10 +1731,10 @@
                     padding: 0 12px;
                     height: 56px;
                     flex-wrap: wrap;
+                    justify-content: flex-start;
                 }
                 .server-pill {
-                    max-width: 100%;
-                    overflow: hidden;
+                    display: none;
                 }
                 .server-url {
                     max-width: 200px;
@@ -1753,6 +1753,9 @@
                     right: auto;
                     left: 0;
                     min-width: 180px;
+                }
+                .server-url {
+                    display: none;
                 }
                 .theme-dropdown {
                     position: fixed !important;
@@ -4586,7 +4589,11 @@
                                         },
                                         op.description,
                                     ),
-                                h("code", { className: "ep-path-pill" }, path),
+                                h(
+                                    "code",
+                                    { className: "ep-path-pill" },
+                                    `${method.toUpperCase()} ${path}`,
+                                ),
                                 h(
                                     "div",
                                     {
