@@ -3745,7 +3745,10 @@
 
                 const multipartContent =
                     ep.op.requestBody?.content?.["multipart/form-data"];
+                const binaryContent =
+                    ep.op.requestBody?.content?.["application/octet-stream"];
                 const isMultipart = !!multipartContent;
+                const isBinary = !!binaryContent;
                 const multipartSchema = multipartContent?.schema;
                 const fileFields =
                     isMultipart && multipartSchema?.properties
@@ -3794,16 +3797,10 @@
                     setResponse(null);
                     const url = buildUrl();
 
-                    if (isMultipart && fileFields.length > 0) {
-                        const formData = new FormData();
-
-                        fileFields.forEach(([fieldName]) => {
-                            const file = selectedFiles[fieldName];
-                            if (file) {
-                                formData.append(fieldName, file);
-                            }
-                        });
-
+                    if (
+                        (isMultipart && fileFields.length > 0) ||
+                        (isBinary && selectedFiles.binary)
+                    ) {
                         const headers = {};
                         if (isSecurityRequired) {
                             if (authType === "api_key" && apiKey) {
@@ -3820,12 +3817,29 @@
                                     `Bearer ${bearerToken}`;
                             }
                         }
-                        // Note: Don't set Content-Type for FormData, browser sets it with boundary
+
+                        let body;
+                        if (isMultipart) {
+                            // For multipart/form-data, use FormData
+                            body = new FormData();
+                            fileFields.forEach(([fieldName]) => {
+                                const file = selectedFiles[fieldName];
+                                if (file) {
+                                    body.append(fieldName, file);
+                                }
+                            });
+                            // Don't set Content-Type for FormData, browser sets it with boundary
+                        } else if (isBinary) {
+                            // For binary content, send file directly
+                            body = selectedFiles.binary;
+                            headers["Content-Type"] =
+                                "application/octet-stream";
+                        }
 
                         const options = {
                             method: ep.method.toUpperCase(),
                             headers,
-                            body: formData,
+                            body,
                         };
 
                         try {
@@ -4385,8 +4399,8 @@
                                             )
                                           : null,
                                 ),
-                            // Show file inputs for multipart/form-data
-                            isMultipart && fileFields.length > 0
+                            // Show file inputs for multipart/form-data or binary content
+                            (isMultipart && fileFields.length > 0) || isBinary
                                 ? h(
                                       "div",
                                       { style: { marginBottom: 12 } },
@@ -4402,106 +4416,204 @@
                                                   marginBottom: 8,
                                               },
                                           },
-                                          "File Upload",
+                                          isBinary
+                                              ? "Binary File Upload"
+                                              : "File Upload",
                                       ),
-                                      h(
-                                          "div",
-                                          {
-                                              style: {
-                                                  display: "flex",
-                                                  flexDirection: "column",
-                                                  gap: "10px",
-                                              },
-                                          },
-                                          fileFields.map(([fieldName, prop]) =>
-                                              h(
-                                                  "div",
-                                                  {
-                                                      key: fieldName,
-                                                      style: {
-                                                          display: "flex",
-                                                          flexDirection:
-                                                              "column",
-                                                          gap: "4px",
-                                                      },
-                                                  },
-                                                  h(
-                                                      "label",
-                                                      {
-                                                          style: {
-                                                              fontSize: 12,
-                                                              color: "var(--t2)",
-                                                              fontWeight: 500,
-                                                          },
-                                                      },
-                                                      fieldName,
-                                                      prop.description &&
-                                                          h(
-                                                              "span",
-                                                              {
-                                                                  style: {
-                                                                      color: "var(--t3)",
-                                                                      fontWeight: 400,
-                                                                      marginLeft:
-                                                                          "4px",
-                                                                  },
-                                                              },
-                                                              " - " +
-                                                                  prop.description,
-                                                          ),
-                                                  ),
-                                                  h("input", {
-                                                      type: "file",
-                                                      className: "param-input",
-                                                      style: {
-                                                          padding: "6px 10px",
-                                                          cursor: "pointer",
-                                                      },
-                                                      onChange: (e) => {
-                                                          const file =
-                                                              e.target
-                                                                  .files?.[0];
-                                                          if (file) {
-                                                              setSelectedFiles(
-                                                                  (prev) => ({
-                                                                      ...prev,
-                                                                      [fieldName]:
-                                                                          file,
-                                                                  }),
-                                                              );
-                                                          }
-                                                      },
-                                                  }),
-                                                  selectedFiles[fieldName] &&
-                                                      h(
-                                                          "div",
-                                                          {
-                                                              style: {
-                                                                  fontSize: 11,
-                                                                  color: "var(--green)",
-                                                              },
-                                                          },
-                                                          h("i", {
-                                                              className:
-                                                                  "fa fa-check-circle",
-                                                              style: {
-                                                                  marginRight: 4,
-                                                              },
-                                                          }),
-                                                          selectedFiles[
-                                                              fieldName
-                                                          ].name +
-                                                              " (" +
-                                                              (
-                                                                  selectedFiles[
-                                                                      fieldName
-                                                                  ].size / 1024
-                                                              ).toFixed(2) +
-                                                              " KB)",
-                                                      ),
-                                              ),
-                                          ),
-                                      ),
+                                      isBinary
+                                          ? h(
+                                                "div",
+                                                {
+                                                    style: {
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        gap: "4px",
+                                                    },
+                                                },
+                                                h(
+                                                    "label",
+                                                    {
+                                                        style: {
+                                                            fontSize: 12,
+                                                            color: "var(--t2)",
+                                                            fontWeight: 500,
+                                                        },
+                                                    },
+                                                    "Select File",
+                                                    binaryContent?.description &&
+                                                        h(
+                                                            "span",
+                                                            {
+                                                                style: {
+                                                                    color: "var(--t3)",
+                                                                    fontWeight: 400,
+                                                                    marginLeft:
+                                                                        "4px",
+                                                                },
+                                                            },
+                                                            " - " +
+                                                                binaryContent.description,
+                                                        ),
+                                                ),
+                                                h("input", {
+                                                    type: "file",
+                                                    className: "param-input",
+                                                    style: {
+                                                        padding: "6px 10px",
+                                                        cursor: "pointer",
+                                                    },
+                                                    onChange: (e) => {
+                                                        const file =
+                                                            e.target.files?.[0];
+                                                        if (file) {
+                                                            setSelectedFiles(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    binary: file,
+                                                                }),
+                                                            );
+                                                        }
+                                                    },
+                                                }),
+                                                selectedFiles.binary &&
+                                                    h(
+                                                        "div",
+                                                        {
+                                                            style: {
+                                                                fontSize: 11,
+                                                                color: "var(--green)",
+                                                            },
+                                                        },
+                                                        h("i", {
+                                                            className:
+                                                                "fa fa-check-circle",
+                                                            style: {
+                                                                marginRight: 4,
+                                                            },
+                                                        }),
+                                                        selectedFiles.binary
+                                                            .name +
+                                                            " (" +
+                                                            (
+                                                                selectedFiles
+                                                                    .binary
+                                                                    .size / 1024
+                                                            ).toFixed(2) +
+                                                            " KB)",
+                                                    ),
+                                            )
+                                          : h(
+                                                "div",
+                                                {
+                                                    style: {
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        gap: "10px",
+                                                    },
+                                                },
+                                                fileFields.map(
+                                                    ([fieldName, prop]) =>
+                                                        h(
+                                                            "div",
+                                                            {
+                                                                key: fieldName,
+                                                                style: {
+                                                                    display:
+                                                                        "flex",
+                                                                    flexDirection:
+                                                                        "column",
+                                                                    gap: "4px",
+                                                                },
+                                                            },
+                                                            h(
+                                                                "label",
+                                                                {
+                                                                    style: {
+                                                                        fontSize: 12,
+                                                                        color: "var(--t2)",
+                                                                        fontWeight: 500,
+                                                                    },
+                                                                },
+                                                                fieldName,
+                                                                prop.description &&
+                                                                    h(
+                                                                        "span",
+                                                                        {
+                                                                            style: {
+                                                                                color: "var(--t3)",
+                                                                                fontWeight: 400,
+                                                                                marginLeft:
+                                                                                    "4px",
+                                                                            },
+                                                                        },
+                                                                        " - " +
+                                                                            prop.description,
+                                                                    ),
+                                                            ),
+                                                            h("input", {
+                                                                type: "file",
+                                                                className:
+                                                                    "param-input",
+                                                                style: {
+                                                                    padding:
+                                                                        "6px 10px",
+                                                                    cursor: "pointer",
+                                                                },
+                                                                onChange: (
+                                                                    e,
+                                                                ) => {
+                                                                    const file =
+                                                                        e.target
+                                                                            .files?.[0];
+                                                                    if (file) {
+                                                                        setSelectedFiles(
+                                                                            (
+                                                                                prev,
+                                                                            ) => ({
+                                                                                ...prev,
+                                                                                [fieldName]:
+                                                                                    file,
+                                                                            }),
+                                                                        );
+                                                                    }
+                                                                },
+                                                            }),
+                                                            selectedFiles[
+                                                                fieldName
+                                                            ] &&
+                                                                h(
+                                                                    "div",
+                                                                    {
+                                                                        style: {
+                                                                            fontSize: 11,
+                                                                            color: "var(--green)",
+                                                                        },
+                                                                    },
+                                                                    h("i", {
+                                                                        className:
+                                                                            "fa fa-check-circle",
+                                                                        style: {
+                                                                            marginRight: 4,
+                                                                        },
+                                                                    }),
+                                                                    selectedFiles[
+                                                                        fieldName
+                                                                    ].name +
+                                                                        " (" +
+                                                                        (
+                                                                            selectedFiles[
+                                                                                fieldName
+                                                                            ]
+                                                                                .size /
+                                                                            1024
+                                                                        ).toFixed(
+                                                                            2,
+                                                                        ) +
+                                                                        " KB)",
+                                                                ),
+                                                        ),
+                                                ),
+                                            ),
                                   )
                                 : // Show JSON editor for non-multipart requests
                                   (ep.method.toLowerCase() === "post" ||
