@@ -105,7 +105,7 @@ pub fn template_with_embedded_theme(spec: &OpenAPISpec, theme_name: &str, favico
 mod tests {
     use super::*;
     use crate::openapi::{Info, OpenAPISpec};
-    use std::collections::HashMap;
+    use indexmap::IndexMap;
 
     #[test]
     fn test_template_generation() {
@@ -121,7 +121,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,
@@ -148,7 +148,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,
@@ -174,7 +174,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,
@@ -201,7 +201,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,
@@ -240,7 +240,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,

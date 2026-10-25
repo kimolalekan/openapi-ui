@@ -1,6 +1,6 @@
 [package]
 name = "openapi-ui"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "A Rust library for generating custom UI for OpenAPI/Swagger documentation."
 license = "MIT"
@@ -20,6 +20,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 thiserror = "1.0.56"
 serde_json = "1.0.111"
 serde = { version = "1.0.195", features = ["derive"] }
+indexmap = { version = "2", features = ["serde"] }
 
 [dev-dependencies]
 tokio = { version = "1.0", features = ["full"] }

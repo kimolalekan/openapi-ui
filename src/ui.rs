@@ -30,7 +30,7 @@ impl Default for UIConfig {
                     x_logo: None,
                 },
                 servers: vec![],
-                paths: std::collections::HashMap::new(),
+                paths: indexmap::IndexMap::new(),
                 components: None,
                 security: None,
                 tags: None,
@@ -135,7 +135,7 @@ pub fn generate_docs(
 mod tests {
     use super::*;
     use crate::openapi::Info;
-    use std::collections::HashMap;
+    use indexmap::IndexMap;
 
     #[test]
     fn test_generate_ui() {
@@ -151,7 +151,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,
@@ -216,7 +216,7 @@ mod tests {
                 x_logo: None,
             },
             servers: vec![],
-            paths: HashMap::new(),
+            paths: IndexMap::new(),
             components: None,
             security: None,
             tags: None,

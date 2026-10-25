@@ -7,7 +7,8 @@
 
 A Rust library for generating custom UI for OpenAPI/Swagger documentation.
 
-**[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)** 
+**[🌐 Live Demo](https://kimolalekan.github.io/openapi-ui)**
+
 ## Table of Contents
 
 - [Features](#features)
@@ -373,9 +374,9 @@ use openapi_ui::{
 
 ```rust
 use openapi_ui::{OpenAPISpec, Info, Server, PathItem, Operation, Response, Schema, SchemaType};
-use std::collections::HashMap;
+use indexmap::IndexMap;
 
-let mut paths = HashMap::new();
+let mut paths = IndexMap::new();
 
 // Add a GET /users endpoint
 paths.insert("/users".to_string(), PathItem {
@@ -387,7 +388,7 @@ paths.insert("/users".to_string(), PathItem {
         parameters: None,
         request_body: None,
         responses: {
-            let mut responses = HashMap::new();
+            let mut responses = IndexMap::new();
             responses.insert("200".to_string(), Response {
                 description: "Successful response".to_string(),
                 content: None,

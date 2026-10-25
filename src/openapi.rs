@@ -1,7 +1,7 @@
 //! Types matching the OpenAPI 3.x specification.
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use indexmap::IndexMap;
 
 /// Root document object of the OpenAPI specification.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -11,7 +11,7 @@ pub struct OpenAPISpec {
     #[serde(default)]
     pub servers: Vec<Server>,
     #[serde(default)]
-    pub paths: HashMap<String, PathItem>,
+    pub paths: IndexMap<String, PathItem>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub components: Option<Components>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -114,9 +114,9 @@ pub struct Operation {
     #[serde(skip_serializing_if = "Option::is_none", rename = "requestBody")]
     pub request_body: Option<RequestBody>,
     #[serde(default)]
-    pub responses: HashMap<String, Response>,
+    pub responses: IndexMap<String, Response>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub callbacks: Option<HashMap<String, serde_json::Value>>,
+    pub callbacks: Option<IndexMap<String, serde_json::Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub deprecated: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -142,7 +142,7 @@ pub struct Parameter {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub example: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub examples: Option<HashMap<String, Example>>,
+    pub examples: Option<IndexMap<String, Example>>,
 }
 
 /// The location of a parameter (query, header, path, or cookie).
@@ -160,7 +160,7 @@ pub enum ParameterLocation {
 pub struct RequestBody {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    pub content: HashMap<String, MediaType>,
+    pub content: IndexMap<String, MediaType>,
     #[serde(default)]
     pub required: bool,
 }
@@ -173,9 +173,9 @@ pub struct MediaType {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub example: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub examples: Option<HashMap<String, Example>>,
+    pub examples: Option<IndexMap<String, Example>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub encoding: Option<HashMap<String, Encoding>>,
+    pub encoding: Option<IndexMap<String, Encoding>>,
 }
 
 /// A single encoding definition applied to a single schema property.
@@ -184,7 +184,7 @@ pub struct Encoding {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content_type: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub headers: Option<HashMap<String, Header>>,
+    pub headers: Option<IndexMap<String, Header>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub style: Option<String>,
     #[serde(default)]
@@ -213,11 +213,11 @@ pub struct Header {
 pub struct Response {
     pub description: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub headers: Option<HashMap<String, Header>>,
+    pub headers: Option<IndexMap<String, Header>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub content: Option<HashMap<String, MediaType>>,
+    pub content: Option<IndexMap<String, MediaType>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub links: Option<HashMap<String, serde_json::Value>>,
+    pub links: Option<IndexMap<String, serde_json::Value>>,
 }
 
 /// An example value for a parameter, media type, or schema.
@@ -281,7 +281,7 @@ pub struct Schema {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Box<Schema>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub properties: Option<HashMap<String, Schema>>,
+    pub properties: Option<IndexMap<String, Schema>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub additional_properties: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -315,7 +315,7 @@ pub struct Schema {
 pub struct Discriminator {
     pub property_name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub mapping: Option<HashMap<String, String>>,
+    pub mapping: Option<IndexMap<String, String>>,
 }
 
 /// XML metadata for a schema property.
@@ -337,23 +337,23 @@ pub struct Xml {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Components {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schemas: Option<HashMap<String, Schema>>,
+    pub schemas: Option<IndexMap<String, Schema>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub responses: Option<HashMap<String, Response>>,
+    pub responses: Option<IndexMap<String, Response>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<HashMap<String, Parameter>>,
+    pub parameters: Option<IndexMap<String, Parameter>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub examples: Option<HashMap<String, Example>>,
+    pub examples: Option<IndexMap<String, Example>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub request_bodies: Option<HashMap<String, RequestBody>>,
+    pub request_bodies: Option<IndexMap<String, RequestBody>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub headers: Option<HashMap<String, Header>>,
+    pub headers: Option<IndexMap<String, Header>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub security_schemes: Option<HashMap<String, SecurityScheme>>,
+    pub security_schemes: Option<IndexMap<String, SecurityScheme>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub links: Option<HashMap<String, serde_json::Value>>,
+    pub links: Option<IndexMap<String, serde_json::Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub callbacks: Option<HashMap<String, serde_json::Value>>,
+    pub callbacks: Option<IndexMap<String, serde_json::Value>>,
 }
 
 /// Defines a security scheme that can be used by the operations.
@@ -414,7 +414,7 @@ pub enum ApiKeyLocation {
 
 /// A security requirement object listing the required security schemes.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SecurityRequirement(pub HashMap<String, Vec<String>>);
+pub struct SecurityRequirement(pub IndexMap<String, Vec<String>>);
 
 /// Adds metadata to a single tag used by operations.
 #[derive(Debug, Clone, Serialize, Deserialize)]
