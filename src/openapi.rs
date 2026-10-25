@@ -1,7 +1,7 @@
 //! Types matching the OpenAPI 3.x specification.
 
-use serde::{Deserialize, Serialize};
 use indexmap::IndexMap;
+use serde::{Deserialize, Serialize};
 
 /// Root document object of the OpenAPI specification.
 #[derive(Debug, Clone, Serialize, Deserialize)]
